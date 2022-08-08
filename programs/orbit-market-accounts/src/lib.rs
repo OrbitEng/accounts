@@ -4,6 +4,7 @@ declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 
 pub mod accessors;
 pub mod structs;
+pub mod errors;
 
 #[program]
 pub mod orbit_market_accounts {
