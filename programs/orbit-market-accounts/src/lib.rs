@@ -6,14 +6,15 @@ pub mod accessors;
 pub mod structs;
 pub mod errors;
 
+pub use accessors::*;
+pub use structs::*;
+pub use errors::*;
+
 #[program]
 pub mod orbit_market_accounts {
     use super::*;
 
-    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
-        Ok(())
+    pub fn change_account_field(ctx: Context<ChangeField>, field: MarketAccountFields, value: Vec<u8>) -> Result<()>{
+        change_field_handler(ctx, field, value)
     }
 }
-
-#[derive(Accounts)]
-pub struct Initialize {}
