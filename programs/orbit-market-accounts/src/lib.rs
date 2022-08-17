@@ -28,6 +28,5 @@ pub mod orbit_market_accounts {
     }
     pub fn submit_rating(ctx: Context<SubmitRating>, rating: usize) -> Result<()>{
         submit_rating_handler(ctx, rating)
-
     }
 }
