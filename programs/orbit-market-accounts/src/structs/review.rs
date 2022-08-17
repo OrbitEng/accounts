@@ -10,4 +10,6 @@ pub struct TransactionReviews{
 pub enum ReviewErrors{
     #[msg("reviews can only be from 1 to 5")]
     RatingOutsideRange,
+    #[msg("can't leave review")]
+    CannotLeaveReview
 }
