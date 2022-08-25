@@ -3,6 +3,10 @@ use crate::{
     structs::market_account::OrbitMarketAccount,
     errors::MarketAccountErrors
 };
+use orbit_addresses::{
+    PHYSICAL_ADDRESS,
+    DIGITAL_ADDRESS
+};
 
 #[derive(Accounts)]
 pub struct CreateMarketAccount<'info>{
@@ -66,12 +70,21 @@ pub struct IncrementTransactions<'info>{
     pub market_account: Account<'info, OrbitMarketAccount>,
 
     #[account(
-        constraint = 
-        (invoker.key() == Pubkey::new(orbit_addresses::PHYSICAL_SIGNER)) ||
-        (invoker.key() == Pubkey::new(orbit_addresses::DIGITAL_SIGNER)) ||
-        (invoker.key() == market_account.master_pubkey)
+        seeds = [
+            b"market_authority"
+        ],
+        seeds::program = caller.key(),
+        bump
     )]
-    pub invoker: Signer<'info>,
+    pub caller_auth: Signer<'info>,
+
+    #[account(
+        constraint = 
+            (caller.key() == Pubkey::new(PHYSICAL_ADDRESS)) ||
+            (caller.key() == Pubkey::new(DIGITAL_ADDRESS))
+    )]
+    /// CHECK: we do do checks
+    pub caller: AccountInfo<'info>
 }
 
 pub fn post_tx_handler(ctx: Context<IncrementTransactions>) -> Result<()>{
@@ -85,11 +98,21 @@ pub struct SubmitRating<'info>{
     pub market_account: Account<'info, OrbitMarketAccount>,
 
     #[account(
-        constraint = 
-        (invoker.key() == Pubkey::new(orbit_addresses::PHYSICAL_SIGNER)) ||
-        (invoker.key() == Pubkey::new(orbit_addresses::DIGITAL_SIGNER))
+        seeds = [
+            b"market_authority"
+        ],
+        seeds::program = caller.key(),
+        bump
     )]
-    pub invoker: Signer<'info>,
+    pub caller_auth: Signer<'info>,
+
+    #[account(
+        constraint = 
+            (caller.key() == Pubkey::new(PHYSICAL_ADDRESS)) ||
+            (caller.key() == Pubkey::new(DIGITAL_ADDRESS))
+    )]
+    /// CHECK: we do do checks
+    pub caller: AccountInfo<'info>
 }
 
 pub fn submit_rating_handler(ctx: Context<SubmitRating>, rating: usize) -> Result<()>{
