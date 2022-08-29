@@ -65,7 +65,7 @@ pub fn set_wallet_handler(ctx: Context<SetWallet>) -> Result<()>{
 }
 
 #[derive(Accounts)]
-pub struct IncrementTransactions<'info>{
+pub struct PostTxContext<'info>{
     #[account(mut)]
     pub market_account: Account<'info, OrbitMarketAccount>,
 
@@ -87,35 +87,12 @@ pub struct IncrementTransactions<'info>{
     pub caller: AccountInfo<'info>
 }
 
-pub fn post_tx_handler(ctx: Context<IncrementTransactions>) -> Result<()>{
+pub fn post_tx_handler(ctx: Context<PostTxContext>) -> Result<()>{
     ctx.accounts.market_account.transactions += 1;
     Ok(())
 }
 
-#[derive(Accounts)]
-pub struct SubmitRating<'info>{
-    #[account(mut)]
-    pub market_account: Account<'info, OrbitMarketAccount>,
-
-    #[account(
-        seeds = [
-            b"market_authority"
-        ],
-        seeds::program = caller.key(),
-        bump
-    )]
-    pub caller_auth: Signer<'info>,
-
-    #[account(
-        constraint = 
-            (caller.key() == Pubkey::new(PHYSICAL_ADDRESS)) ||
-            (caller.key() == Pubkey::new(DIGITAL_ADDRESS))
-    )]
-    /// CHECK: we do do checks
-    pub caller: AccountInfo<'info>
-}
-
-pub fn submit_rating_handler(ctx: Context<SubmitRating>, rating: usize) -> Result<()>{
+pub fn submit_rating_handler(ctx: Context<PostTxContext>, rating: usize) -> Result<()>{
     ctx.accounts.market_account.reputation[rating] += 1;
     Ok(())
 }

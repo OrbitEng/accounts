@@ -22,11 +22,11 @@ pub mod orbit_market_accounts {
         set_wallet_handler(ctx)
 
     }
-    pub fn post_tx(ctx: Context<IncrementTransactions>) -> Result<()>{
+    pub fn post_tx(ctx: Context<PostTxContext>) -> Result<()>{
         post_tx_handler(ctx)
 
     }
-    pub fn submit_rating(ctx: Context<SubmitRating>, rating: usize) -> Result<()>{
+    pub fn submit_rating(ctx: Context<PostTxContext>, rating: usize) -> Result<()>{
         submit_rating_handler(ctx, rating)
     }
 }
