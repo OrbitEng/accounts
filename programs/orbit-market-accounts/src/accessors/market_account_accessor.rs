@@ -12,7 +12,7 @@ use orbit_addresses::{
 pub struct CreateMarketAccount<'info>{
     #[account(
         init,
-        space = 250,
+        space = 400, // metadata should be of len 44. profile pic url is variable
         payer = payer
     )]
     pub market_account: Account<'info, OrbitMarketAccount>,
@@ -25,7 +25,7 @@ pub struct CreateMarketAccount<'info>{
     pub system_program: Program<'info, System>
 }
 
-pub fn create_account_handler(ctx: Context<CreateMarketAccount>, metadata_link: [u8; 64], payer_as_wallet: bool) -> Result<()>{
+pub fn create_account_handler(ctx: Context<CreateMarketAccount>, metadata_link: String, payer_as_wallet: bool) -> Result<()>{
     if ctx.accounts.master_auth.owner.key() != system_program::ID{
         return err!(MarketAccountErrors::InvalidMasterPubkey)
     };
@@ -37,7 +37,7 @@ pub fn create_account_handler(ctx: Context<CreateMarketAccount>, metadata_link: 
 
     ctx.accounts.market_account.master_pubkey = ctx.accounts.master_auth.key();
     ctx.accounts.market_account.account_created = clock.unix_timestamp;
-    ctx.accounts.market_account.metadata = metadata_link;
+    ctx.accounts.market_account.metadata = metadata_link.into_bytes();
 
     // 人之初，性本善。性相近，习相远
     ctx.accounts.market_account.reputation = [0; 5];
@@ -61,6 +61,22 @@ pub struct SetWallet<'info>{
 
 pub fn set_wallet_handler(ctx: Context<SetWallet>) -> Result<()>{
     ctx.accounts.market_account.wallet = ctx.accounts.new_wallet.key();
+    Ok(())
+}
+
+#[derive(Accounts)]
+pub struct UpdateAccountFieldUser<'info>{
+    #[account(mut)]
+    pub market_account: Account<'info, OrbitMarketAccount>,
+
+    #[account(
+        address = market_account.master_pubkey
+    )]
+    pub change_authority: Signer<'info>
+}
+
+pub fn update_profile_image_handler(ctx: Context<UpdateAccountFieldUser>, new_link: String) -> Result<()>{
+    ctx.accounts.market_account.profile_pic = new_link.into_bytes();
     Ok(())
 }
 

@@ -8,12 +8,6 @@ pub struct OrbitMarketAccount{
     pub wallet: Pubkey,
     // if someone does more than 4 trillion transactions, ill change this value
     pub transactions: u32,
-    // we're gonna allocate this 256 to be UBER FUCKING SAFE
-    // ideally from FE we query arweave.net/txid/{metadata}
-    //      note: fields that should not be changed (like name) must be here
-    //            we dont let ppl change names so they cant scam
-    // its technically length 43. so len44 base 58 encoded 128 byte key i believe.
-    pub metadata: [u8; 64],
 
     // I want this to be the pubkey that the owner uses to make other changes
     // like they should be able to link diff wallets, but if their original wallet isnt connect
@@ -25,4 +19,12 @@ pub struct OrbitMarketAccount{
 
     // THIS IS ON A SCALE OF 0-5 LIKE UBER DONT TRY TO GET SLICK AND GIVE URSELF A 255 I WILL PERSONALLY FIND U AND FUCK U IN THE ASS
     pub reputation: [u32; 5], 
+    
+    // we're gonna allocate this 256 to be UBER FUCKING SAFE
+    // ideally from FE we query arweave.net/txid/{metadata}
+    //      note: fields that should not be changed (like name) must be here
+    //            we dont let ppl change names so they cant scam
+    // its technically length 43. so len44 base 58 encoded 128 byte key i believe.
+    pub metadata: Vec<u8>,
+    pub profile_pic: Vec<u8>,
 }

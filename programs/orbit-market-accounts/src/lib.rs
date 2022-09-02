@@ -14,10 +14,14 @@ pub use errors::*;
 pub mod orbit_market_accounts {
     use super::*;
 
-    pub fn create_account(ctx: Context<CreateMarketAccount>, metadata_link: [u8; 64], payer_as_wallet: bool) -> Result<()>{
+    pub fn create_account(ctx: Context<CreateMarketAccount>, metadata_link: String, payer_as_wallet: bool) -> Result<()>{
         create_account_handler(ctx, metadata_link, payer_as_wallet)
-
     }
+
+    pub fn update_profile_image(ctx: Context<UpdateAccountFieldUser>, new_link: String) -> Result<()>{
+        update_profile_image_handler(ctx, new_link)
+    }
+
     pub fn set_wallet(ctx: Context<SetWallet>) -> Result<()>{
         set_wallet_handler(ctx)
 
