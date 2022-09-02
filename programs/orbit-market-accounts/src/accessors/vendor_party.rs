@@ -1,8 +1,12 @@
 use anchor_lang::prelude::*;
 use orbit_catalog::{
     cpi::{
-        accounts::CreateParty,
-        create_party
+        accounts::{
+            CreateParty,
+            ModifyParty
+        },
+        create_party,
+        edit_party
     },
     program::OrbitCatalog,
     OrbitCatalogErrors, OrbitPartyGroup
@@ -10,7 +14,7 @@ use orbit_catalog::{
 
 use crate::{
     OrbitMarketAccount,
-    MarketAccountErrors
+    MarketAccountErrors, program::OrbitMarketAccounts
 };
 
 #[derive(Accounts)]
@@ -80,6 +84,8 @@ pub struct UpdateTopVendors<'info>{
     pub new_account: Account<'info, OrbitMarketAccount>,
 
     pub catalog_program: Program<'info, OrbitCatalog>,
+
+    pub accounts_program: Program<'info, OrbitMarketAccounts>
 }
 
 pub fn update_top_vendors_handler(ctx: Context<UpdateTopVendors>, index: u8) -> Result<()>{
@@ -87,7 +93,20 @@ pub fn update_top_vendors_handler(ctx: Context<UpdateTopVendors>, index: u8) -> 
         return err!(MarketAccountErrors::InvalidAccountsProgramAction)
     }
 
-    ctx.accounts.top_vendors.accounts[index as usize] = ctx.accounts.new_account.key();
-
-    Ok(())
+    match ctx.bumps.get("accounts_auth"){
+        Some(auth_bump) => edit_party(
+                CpiContext::new_with_signer(
+                    ctx.accounts.catalog_program.to_account_info(),
+                    ModifyParty{
+                        party: ctx.accounts.top_vendors.to_account_info(),
+                        auth: ctx.accounts.accounts_auth.to_account_info(),
+                        insertion_acc: ctx.accounts.new_account.to_account_info(),
+                        accounts_address: ctx.accounts.accounts_program.to_account_info()
+                    },
+                    &[&[b"market_auth", &[*auth_bump]]]
+                ),
+                index
+            ),
+        None => return err!(OrbitCatalogErrors::CouldNotCallCatalogProgram)
+    }
 }
