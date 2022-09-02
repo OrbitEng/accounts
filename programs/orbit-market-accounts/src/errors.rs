@@ -6,4 +6,6 @@ pub enum MarketAccountErrors{
     InvalidMasterPubkey,
     #[msg("Could not call orbit accounts program")]
     CannotCallOrbitAccountsProgram,
+    #[msg("invalid action")]
+    InvalidAccountsProgramAction,
 }

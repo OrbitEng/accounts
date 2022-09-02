@@ -33,4 +33,15 @@ pub mod orbit_market_accounts {
     pub fn submit_rating(ctx: Context<PostTxContext>, rating: usize) -> Result<()>{
         submit_rating_handler(ctx, rating)
     }
+
+    /////////////////
+    /// PARTY ACCESSORS
+    
+    pub fn init_top_vendor(ctx: Context<InitTopVendorsParty>) -> Result<()>{
+        init_top_vendor_handler(ctx)
+    }
+
+    pub fn update_top_vendors(ctx: Context<UpdateTopVendors>, index: u8) -> Result<()>{
+        update_top_vendors_handler(ctx, index)
+    }
 }
