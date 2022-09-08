@@ -24,7 +24,6 @@ pub struct OrbitMarketAccount{
     // ideally from FE we query arweave.net/txid/{metadata}
     //      note: fields that should not be changed (like name) must be here
     //            we dont let ppl change names so they cant scam
-    // its technically length 43. so len44 base 58 encoded 128 byte key i believe.
     pub metadata: Vec<u8>,
     pub profile_pic: Vec<u8>,
 }
