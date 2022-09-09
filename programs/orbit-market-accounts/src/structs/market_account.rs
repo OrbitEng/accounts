@@ -18,12 +18,15 @@ pub struct OrbitMarketAccount{
     pub account_created: i64,
 
     // THIS IS ON A SCALE OF 0-5 LIKE UBER DONT TRY TO GET SLICK AND GIVE URSELF A 255 I WILL PERSONALLY FIND U AND FUCK U IN THE ASS
-    pub reputation: [u32; 5], 
+    pub reputation: [u32; 5],
     
     // we're gonna allocate this 256 to be UBER FUCKING SAFE
     // ideally from FE we query arweave.net/txid/{metadata}
     //      note: fields that should not be changed (like name) must be here
     //            we dont let ppl change names so they cant scam
-    pub metadata: Vec<u8>,
-    pub profile_pic: Vec<u8>,
+    pub metadata: Vec<u8>, // 43
+    pub profile_pic: Vec<u8>, // 43
+
+    pub reflink: Pubkey,
+    pub dispute_discounts: u16,
 }
