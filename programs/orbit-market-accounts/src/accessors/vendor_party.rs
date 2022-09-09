@@ -66,7 +66,7 @@ pub fn init_top_vendor_handler(ctx: Context<InitTopVendorsParty>) -> Result<()>{
 pub struct UpdateTopVendors<'info>{
 
     #[account(mut)]
-    pub top_vendors: Account<'info, OrbitPartyGroup>,
+    pub top_vendors: Box<Account<'info, OrbitPartyGroup>>,
 
     #[account(
         seeds = [
@@ -79,9 +79,9 @@ pub struct UpdateTopVendors<'info>{
     #[account(
         address = top_vendors.accounts[index as usize]
     )]
-    pub old_account: Account<'info, OrbitMarketAccount>,
+    pub old_account: Box<Account<'info, OrbitMarketAccount>>,
 
-    pub new_account: Account<'info, OrbitMarketAccount>,
+    pub new_account: Box<Account<'info, OrbitMarketAccount>>,
 
     pub catalog_program: Program<'info, OrbitCatalog>,
 
