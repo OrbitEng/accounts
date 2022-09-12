@@ -14,6 +14,9 @@ pub use errors::*;
 pub mod orbit_market_accounts {
     use super::*;
 
+    ////////////////////////////////////
+    /// ACCOUNT UTILS
+    
     pub fn create_account(ctx: Context<CreateMarketAccount>, metadata_link: String, payer_as_wallet: bool) -> Result<()>{
         create_account_handler(ctx, metadata_link, payer_as_wallet)
     }
@@ -30,6 +33,11 @@ pub mod orbit_market_accounts {
         post_tx_handler(ctx)
 
     }
+
+    pub fn set_reflink(ctx: Context<AddReflink>) -> Result<()>{
+        add_reflink_handler(ctx)
+    }
+
     pub fn submit_rating(ctx: Context<PostTxContext>, rating: usize) -> Result<()>{
         submit_rating_handler(ctx, rating)
     }
@@ -43,5 +51,12 @@ pub mod orbit_market_accounts {
 
     pub fn update_top_vendors(ctx: Context<UpdateTopVendors>, index: u8) -> Result<()>{
         update_top_vendors_handler(ctx, index)
+    }
+
+    /////////////////
+    /// REFLINK UTILS
+    
+    pub fn create_reflink(ctx: Context<CreateReflink>) -> Result<()>{
+        init_reflink_handler(ctx)
     }
 }
