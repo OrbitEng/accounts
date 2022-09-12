@@ -33,5 +33,6 @@ pub struct CreateReflink<'info>{
 
 pub fn init_reflink_handler(ctx: Context<CreateReflink>) -> Result<()>{
     ctx.accounts.reflink.uses = 0;
+    ctx.accounts.reflink.owner = ctx.accounts.market_account.key();
     Ok(())
 }

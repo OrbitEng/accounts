@@ -27,6 +27,7 @@ pub struct OrbitMarketAccount{
     pub metadata: Vec<u8>, // 43
     pub profile_pic: Vec<u8>, // 43
 
+    // reflink account of referrer
     pub reflink: Pubkey,
     pub dispute_discounts: u16,
 }

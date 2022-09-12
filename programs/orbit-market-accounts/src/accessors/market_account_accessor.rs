@@ -1,7 +1,7 @@
 use anchor_lang::{prelude::*, system_program};
 use crate::{
     structs::market_account::OrbitMarketAccount,
-    errors::MarketAccountErrors
+    errors::MarketAccountErrors, OrbitReflink
 };
 use orbit_addresses::{
     PHYSICAL_ADDRESS,
@@ -42,6 +42,15 @@ pub fn create_account_handler(ctx: Context<CreateMarketAccount>, metadata_link: 
     // 人之初，性本善。性相近，习相远
     ctx.accounts.market_account.reputation = [0; 5];
     ctx.accounts.market_account.transactions = 0;
+
+    if ctx.remaining_accounts.len() == 1{
+        let mut reflink_acc = Account::<OrbitReflink>::try_from(&ctx.remaining_accounts[0].to_account_info()).expect("reflink does not exist");
+        ctx.accounts.market_account.reflink = reflink_acc.key();
+        reflink_acc.uses += 1;
+        reflink_acc.exit(ctx.program_id)?;
+    }else{
+        ctx.accounts.market_account.reflink = Pubkey::new(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
+    }
     Ok(())
 }
 
@@ -61,6 +70,29 @@ pub struct SetWallet<'info>{
 
 pub fn set_wallet_handler(ctx: Context<SetWallet>) -> Result<()>{
     ctx.accounts.market_account.wallet = ctx.accounts.new_wallet.key();
+    Ok(())
+}
+
+#[derive(Accounts)]
+pub struct AddReflink<'info>{
+    #[account(mut)]
+    pub market_account: Account<'info, OrbitMarketAccount>,
+
+    #[account(
+        mut,
+        constraint = reflink.uses < 10
+    )]
+    pub reflink: Account<'info, OrbitReflink>,
+
+    #[account(
+        address = market_account.master_pubkey
+    )]
+    pub change_authority: Signer<'info>
+}
+
+pub fn add_reflink_handler(ctx: Context<AddReflink>) -> Result<()>{
+    ctx.accounts.market_account.reflink = ctx.accounts.reflink.key();
+    ctx.accounts.reflink.uses += 1;
     Ok(())
 }
 
