@@ -751,7 +751,6 @@ version = "0.1.0"
 dependencies = [
  "anchor-lang",
  "orbit-addresses",
- "orbit-catalog",
 ]
 
 [[package]]
@@ -826,15 +825,6 @@ version = "0.1.0"
 source = "git+https://github.com/OrbitEng/addresses#1f3ef39f1cfe0f10221afdc65bfa3a777b68db93"
 dependencies = [
  "anchor-lang",
-]
-
-[[package]]
-name = "orbit-catalog"
-version = "0.1.0"
-source = "git+https://github.com/OrbitEng/catalog#f1800693f77b6c208b0ada641ca38e1a5347f829"
-dependencies = [
- "anchor-lang",
- "orbit-addresses",
 ]
 
 [[package]]
