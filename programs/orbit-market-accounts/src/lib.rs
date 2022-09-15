@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-declare_id!("ibRC94BJf9AjLN75GwRKkMB6FXFLrhQj2JCC719JMJ4");
+declare_id!("EyNn3f8bEaMTofYnbjUecUGQHuGdkfppWjFs5bPfaBd2");
 
 pub mod accessors;
 pub mod structs;
@@ -41,18 +41,6 @@ pub mod orbit_market_accounts {
     pub fn submit_rating(ctx: Context<PostTxContext>, rating: usize) -> Result<()>{
         submit_rating_handler(ctx, rating)
     }
-
-    /////////////////
-    /// PARTY ACCESSORS
-    
-    pub fn init_top_vendor(ctx: Context<InitTopVendorsParty>) -> Result<()>{
-        init_top_vendor_handler(ctx)
-    }
-
-    pub fn update_top_vendors(ctx: Context<UpdateTopVendors>, index: u8) -> Result<()>{
-        update_top_vendors_handler(ctx, index)
-    }
-
     /////////////////
     /// REFLINK UTILS
     
