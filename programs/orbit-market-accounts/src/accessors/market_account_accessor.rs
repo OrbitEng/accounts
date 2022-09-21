@@ -37,7 +37,7 @@ pub fn create_account_handler(ctx: Context<CreateMarketAccount>, metadata_link: 
 
     ctx.accounts.market_account.master_pubkey = ctx.accounts.master_auth.key();
     ctx.accounts.market_account.account_created = clock.unix_timestamp;
-    ctx.accounts.market_account.metadata = metadata_link.into_bytes();
+    ctx.accounts.market_account.metadata = metadata_link;
 
     // 人之初，性本善。性相近，习相远
     ctx.accounts.market_account.reputation = [0; 5];
@@ -108,7 +108,7 @@ pub struct UpdateAccountFieldUser<'info>{
 }
 
 pub fn update_profile_image_handler(ctx: Context<UpdateAccountFieldUser>, new_link: String) -> Result<()>{
-    ctx.accounts.market_account.profile_pic = new_link.into_bytes();
+    ctx.accounts.market_account.profile_pic = new_link;
     Ok(())
 }
 

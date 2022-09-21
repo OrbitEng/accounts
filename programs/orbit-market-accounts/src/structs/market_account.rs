@@ -24,8 +24,8 @@ pub struct OrbitMarketAccount{
     // ideally from FE we query arweave.net/txid/{metadata}
     //      note: fields that should not be changed (like name) must be here
     //            we dont let ppl change names so they cant scam
-    pub metadata: Vec<u8>, // 43
-    pub profile_pic: Vec<u8>, // 43
+    pub metadata: String, // 43
+    pub profile_pic: String, // 43
 
     // reflink account of referrer
     pub reflink: Pubkey,
