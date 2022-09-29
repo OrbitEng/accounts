@@ -2,7 +2,7 @@ use anchor_lang::prelude::*;
 use crate::{structs::AccountTransfer, OrbitMarketAccount};
 
 #[derive(Accounts)]
-pub struct InitTransafer<'info>{
+pub struct InitTransfer<'info>{
 
     #[account(
         init,
