@@ -9,12 +9,6 @@ pub struct OrbitMarketAccount{
     // if someone does more than 4 trillion transactions, ill change this value
     pub transactions: u32,
 
-    // I want this to be the pubkey that the owner uses to make other changes
-    // like they should be able to link diff wallets, but if their original wallet isnt connect
-    // how do we know they have XYZ authority? or if a wallet isnt connected at all, there's nothing
-    // to sign for.
-    pub master_pubkey: Pubkey,
-
     pub account_created: i64,
 
     // THIS IS ON A SCALE OF 0-5 LIKE UBER DONT TRY TO GET SLICK AND GIVE URSELF A 255 I WILL PERSONALLY FIND U AND FUCK U IN THE ASS
