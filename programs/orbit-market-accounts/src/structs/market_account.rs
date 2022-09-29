@@ -3,6 +3,10 @@ use anchor_lang::prelude::*;
 
 #[account]
 pub struct OrbitMarketAccount{
+    // note: pubkey is just [u8; 32]
+    //    we're gonna do some cool magic soon >:)
+    pub wallet: Pubkey,
+
     // if someone does more than 4 trillion transactions, ill change this value
     pub transactions: u32,
 
