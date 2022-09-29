@@ -21,13 +21,20 @@ pub struct CreateReflink<'info>{
     #[account(mut)]
     pub payer: Signer<'info>,
 
+    #[account(
+        seeds = [
+            b"orbit_account",
+            wallet.key().as_ref()
+        ],
+        bump
+    )]
     pub market_account: Account<'info, OrbitMarketAccount>,
 
     
     #[account(
-        address = market_account.master_pubkey
+        address = market_account.wallet
     )]
-    pub market_auth: Signer<'info>,
+    pub wallet: Signer<'info>,
 
     pub system_program: Program<'info, System>
 }
