@@ -7,8 +7,6 @@ pub struct OrbitMarketAccount{
     //    we're gonna do some cool magic soon >:)
     pub wallet: Pubkey,
 
-    pub nonce: u8,
-
     // if someone does more than 4 trillion transactions, ill change this value
     pub transactions: u32,
 
