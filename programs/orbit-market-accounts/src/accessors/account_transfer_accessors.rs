@@ -93,7 +93,6 @@ pub struct ConfirmTransfer<'info>{
     pub transfer_request: Account<'info, AccountTransfer>
 }
 
-// tood: implement logic && expose in lib.rs
 pub fn account_transfer_init(ctx: Context<InitTransfer>) -> Result<()> {
     ctx.accounts.transfer_struct.destination = ctx.accounts.destination_market_account.key();
     ctx.accounts.transfer_struct.source = ctx.accounts.source_market_account.key();
