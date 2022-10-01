@@ -78,4 +78,4 @@ pub struct ConfirmTransfer<'info>{
     pub destination_wallet: Signer<'info>,
 }
 
-// tood: implement logic && expose in lib.rs
+// todo: implement logic && expose in lib.rs
