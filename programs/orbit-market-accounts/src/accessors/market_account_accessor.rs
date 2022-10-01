@@ -5,7 +5,8 @@ use crate::{
 };
 use orbit_addresses::{
     PHYSICAL_ADDRESS,
-    DIGITAL_ADDRESS
+    DIGITAL_ADDRESS,
+    COMMISSION_ADDRESS
 };
 
 #[derive(Accounts)]
@@ -120,7 +121,8 @@ pub struct PostTxContext<'info>{
     #[account(
         constraint = 
             (caller.key() == Pubkey::new(PHYSICAL_ADDRESS)) ||
-            (caller.key() == Pubkey::new(DIGITAL_ADDRESS))
+            (caller.key() == Pubkey::new(DIGITAL_ADDRESS)) ||
+            (caller.key() == Pubkey::new(COMMISSION_ADDRESS))
     )]
     /// CHECK: we do do checks
     pub caller: AccountInfo<'info>
