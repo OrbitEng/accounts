@@ -9,19 +9,18 @@ pub struct CreateReflink<'info>{
         init,
         space = 64,
         seeds = [
-            b"reflink",
+            b"orbit_reflink",
             market_account.key().as_ref()
         ],
         bump,
 
-        payer = payer
+        payer = wallet
     )]
     pub reflink: Account<'info, OrbitReflink>,
 
-    #[account(mut)]
-    pub payer: Signer<'info>,
-
     #[account(
+        constraint = (Clock::get()?.unix_timestamp - market_account.account_created) > 604800,
+        constraint = market_account.transactions > 3,
         seeds = [
             b"orbit_account",
             wallet.key().as_ref()
@@ -32,6 +31,7 @@ pub struct CreateReflink<'info>{
 
     
     #[account(
+        mut,
         address = market_account.wallet
     )]
     pub wallet: Signer<'info>,

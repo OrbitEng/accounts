@@ -29,12 +29,13 @@ pub struct CreateMarketAccount<'info>{
     pub system_program: Program<'info, System>
 }
 
-pub fn create_account_handler(ctx: Context<CreateMarketAccount>, metadata_link: String) -> Result<()>{
+pub fn create_account_handler(ctx: Context<CreateMarketAccount>, pfp_link: String, metadata_link: String) -> Result<()>{
     let clock = Clock::get().expect("Could not get CLOCK SYSVAR");
 
     ctx.accounts.market_account.wallet = ctx.accounts.wallet.key();
     ctx.accounts.market_account.account_created = clock.unix_timestamp;
     ctx.accounts.market_account.metadata = metadata_link;
+    ctx.accounts.market_account.profile_pic = pfp_link;
 
     // 人之初，性本善。性相近，习相远
     ctx.accounts.market_account.reputation = [0; 5];

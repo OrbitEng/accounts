@@ -17,8 +17,8 @@ pub mod orbit_market_accounts {
     ////////////////////////////////////
     /// ACCOUNT UTILS
     
-    pub fn create_account(ctx: Context<CreateMarketAccount>, metadata_link: String) -> Result<()>{
-        create_account_handler(ctx, metadata_link)
+    pub fn create_account(ctx: Context<CreateMarketAccount>, pfp_link: String, metadata_link: String) -> Result<()>{
+        create_account_handler(ctx, pfp_link, metadata_link)
     }
 
     pub fn update_profile_image(ctx: Context<UpdateAccountFieldUser>, new_link: String) -> Result<()>{
