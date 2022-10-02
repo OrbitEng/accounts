@@ -1,6 +1,5 @@
-use anchor_lang::prelude::*;
-use MarketAccountErrors;
-use crate::{structs::AccountTransfer, OrbitMarketAccount};
+use anchor_lang::{prelude::*, AccountsClose};
+use crate::{structs::AccountTransfer, OrbitMarketAccount, MarketAccountErrors, OrbitReflink};
 
 #[derive(Accounts)]
 pub struct InitTransfer<'info>{
@@ -103,33 +102,33 @@ pub fn account_transfer_init(ctx: Context<InitTransfer>) -> Result<()> {
 pub fn account_tranfer_confirm(ctx: Context<ConfirmTransfer>) -> Result<()> {
     // check for scam-ish data
     if ctx.accounts.transfer_request.destination != ctx.accounts.destination_market_account.key() {
-        err!(MarketAccountErrors::MismatchedTransferDestination);
+        return err!(MarketAccountErrors::MismatchedTransferDestination);
     }
 
     if ctx.accounts.source_market_account.key() != ctx.accounts.transfer_request.source {
-        err!(MarketAccountErrors::MismatchedTransferSource);
+        return err!(MarketAccountErrors::MismatchedTransferSource);
     }
 
     // transfer all the data
     ctx.accounts.source_market_account.transactions = ctx.accounts.source_market_account.transactions;
     ctx.accounts.source_market_account.account_created = ctx.accounts.source_market_account.account_created;
     ctx.accounts.source_market_account.reputation = ctx.accounts.source_market_account.reputation;
-    ctx.accounts.source_market_account.metadata = ctx.accounts.source_market_account.metadata;
-    ctx.accounts.source_market_account.profile_pic = ctx.accounts.source_market_account.profile_pic;
+    ctx.accounts.source_market_account.metadata = ctx.accounts.source_market_account.metadata.clone();
+    ctx.accounts.source_market_account.profile_pic = ctx.accounts.source_market_account.profile_pic.clone();
     ctx.accounts.source_market_account.reflink = ctx.accounts.source_market_account.reflink;
     ctx.accounts.source_market_account.dispute_discounts = ctx.accounts.source_market_account.dispute_discounts;
 
-    // delete data
-    // TODO: check if all this data is set as null the right way
-    ctx.accounts.source_market_account.transactions = 0;
-    ctx.accounts.source_market_account.account_created = 0;
-    ctx.accounts.source_market_account.reputation = [0;5];
-    ctx.accounts.source_market_account.metadata = "used".to_string();
-    ctx.accounts.source_market_account.profile_pic = "na".to_string();
-    // this is def hacky
-    ctx.accounts.source_market_account.reflink = ctx.accounts.source_wallet.key();
-    ctx.accounts.source_market_account.dispute_discounts = 0;
+    if ctx.remaining_accounts.len() == 1{
+        let mut reflink = Account::<OrbitReflink>::try_from(&ctx.remaining_accounts[0]).expect("did not pass in a reflink account");
+        if (reflink.owner != ctx.accounts.source_market_account.key()) || (ctx.accounts.source_market_account.owned_reflink != ctx.remaining_accounts[0].key()){
+            return err!(MarketAccountErrors::MismatchedReflink);
+        }
 
+        reflink.owner = ctx.accounts.destination_market_account.key();
+        ctx.accounts.destination_market_account.owned_reflink = ctx.accounts.source_market_account.owned_reflink;
+    }
 
-    Ok(())
+    // close old account to old wallet
+    ctx.accounts.source_market_account.close(ctx.accounts.source_wallet.to_account_info()).expect("could not close old market account");
+    ctx.accounts.transfer_request.close(ctx.accounts.source_wallet.to_account_info())
 }

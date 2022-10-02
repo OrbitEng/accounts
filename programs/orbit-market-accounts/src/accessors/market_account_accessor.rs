@@ -40,6 +40,7 @@ pub fn create_account_handler(ctx: Context<CreateMarketAccount>, pfp_link: Strin
     // 人之初，性本善。性相近，习相远
     ctx.accounts.market_account.reputation = [0; 5];
     ctx.accounts.market_account.transactions = 0;
+    ctx.accounts.market_account.owned_reflink = Pubkey::new(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
 
     if ctx.remaining_accounts.len() == 1{
         let mut reflink_acc = Account::<OrbitReflink>::try_from(&ctx.remaining_accounts[0].to_account_info()).expect("reflink does not exist");
@@ -79,6 +80,45 @@ pub struct AddReflink<'info>{
 pub fn add_reflink_handler(ctx: Context<AddReflink>) -> Result<()>{
     ctx.accounts.market_account.reflink = ctx.accounts.reflink.key();
     ctx.accounts.reflink.uses += 1;
+    ctx.accounts.reflink.users.push(ctx.accounts.market_account.key());
+    Ok(())
+}
+
+
+#[derive(Accounts)]
+pub struct RemoveReflink<'info>{
+    #[account(
+        mut,
+        seeds = [
+            b"orbit_account",
+            wallet.key().as_ref()
+        ],
+        bump
+    )]
+    pub market_account: Account<'info, OrbitMarketAccount>,
+
+    #[account(
+        mut,
+        address = market_account.reflink
+    )]
+    pub reflink: Account<'info, OrbitReflink>,
+
+    #[account(
+        address = market_account.wallet
+    )]
+    pub wallet: Signer<'info>
+}
+
+pub fn remove_reflink_handler(ctx: Context<RemoveReflink>) -> Result<()>{
+    ctx.accounts.market_account.reflink = Pubkey::new(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
+    ctx.accounts.reflink.uses -= 1;
+    let pos = ctx.accounts.reflink.users.iter().position(|user| user.to_owned() == ctx.accounts.market_account.key()).expect("user not found for reflink");
+    if pos == (ctx.accounts.reflink.users.len()-1){
+        ctx.accounts.reflink.users.drain(pos..);
+    }else{
+        ctx.accounts.reflink.users.drain(pos..pos+1);
+    }
+    
     Ok(())
 }
 

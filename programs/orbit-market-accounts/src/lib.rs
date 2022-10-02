@@ -29,8 +29,12 @@ pub mod orbit_market_accounts {
         post_tx_handler(ctx)
     }
 
+    /// REFLINKS
     pub fn set_reflink(ctx: Context<AddReflink>) -> Result<()>{
         add_reflink_handler(ctx)
+    }
+    pub fn remove_reflink(ctx: Context<RemoveReflink>) -> Result<()>{
+        remove_reflink_handler(ctx)
     }
 
     pub fn submit_rating(ctx: Context<PostTxContext>, rating: usize) -> Result<()>{
@@ -41,5 +45,9 @@ pub mod orbit_market_accounts {
     
     pub fn create_reflink(ctx: Context<CreateReflink>) -> Result<()>{
         init_reflink_handler(ctx)
+    }
+
+    pub fn delete_reflink(ctx: Context<DeleteReflink>) -> Result<()>{
+        delete_reflink_handler(ctx)
     }
 }

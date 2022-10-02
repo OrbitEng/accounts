@@ -12,4 +12,8 @@ pub enum MarketAccountErrors{
     MismatchedTransferDestination,
     #[msg("mismatched sources addresses in transfer request confirmation.")]
     MismatchedTransferSource,
+    #[msg("reflink passed was not for the source market account")]
+    MismatchedReflink,
+    #[msg("users passed do not match reflink")]
+    MismatchedUsersForReflink,
 }
