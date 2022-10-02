@@ -40,6 +40,21 @@ pub mod orbit_market_accounts {
     pub fn submit_rating(ctx: Context<PostTxContext>, rating: usize) -> Result<()>{
         submit_rating_handler(ctx, rating)
     }
+
+    /// TRANSFERS
+    
+    pub fn initiate_transfer(ctx: Context<InitTransfer>) -> Result<()>{
+        account_transfer_init(ctx)
+    }
+
+    pub fn confirm_transfer(ctx: Context<ConfirmTransfer>) -> Result<()> {
+        account_transfer_confirm(ctx)
+    }
+
+    pub fn decline_transfer(ctx: Context<DeclineTransfer>) -> Result<()>{
+        account_transfer_decline(ctx)
+    }
+
     /////////////////
     /// REFLINK UTILS
     
