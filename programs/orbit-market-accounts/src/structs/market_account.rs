@@ -29,5 +29,7 @@ pub struct OrbitMarketAccount{
     // for transferring and shit
     pub owned_reflink: Pubkey,
     pub transfer_struct: Pubkey,
-    pub vendor_catalog: Pubkey
+    pub digital_vendor_catalog: Pubkey,
+    pub physical_vendor_catalog: Pubkey,
+    pub commission_vendor_catalog: Pubkey
 }
