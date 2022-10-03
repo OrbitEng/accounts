@@ -8,8 +8,8 @@ pub struct InitTransfer<'info>{
         init,
         seeds = [
             b"orbit_transfer",
-            source_wallet.key().as_ref(),
-            destination_wallet.key().as_ref()
+            source_market_account.key().as_ref(),
+            destination_market_account.key().as_ref()
         ],
         bump,
         payer = source_wallet,
@@ -141,6 +141,7 @@ pub fn account_transfer_confirm(ctx: Context<ConfirmTransfer>) -> Result<()> {
     ctx.accounts.transfer_request.close(ctx.accounts.source_wallet.to_account_info()).expect("could not close transfer struct");
 
     ctx.accounts.destination_market_account.transfer_struct = Pubkey::new(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
+    ctx.accounts.destination_market_account.vendor_catalog = ctx.accounts.source_market_account.vendor_catalog;
     Ok(())
 }
 

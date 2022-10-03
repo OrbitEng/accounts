@@ -20,6 +20,7 @@ pub struct CreateReflink<'info>{
 
     #[account(
         mut,
+        constraint = market_account.owned_reflink == Pubkey::new(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]),
         constraint = (Clock::get()?.unix_timestamp - market_account.account_created) > 604800,
         constraint = market_account.transactions > 3,
         seeds = [
@@ -87,5 +88,8 @@ pub fn delete_reflink_handler(ctx: Context<DeleteReflink>) -> Result<()>{
         user_acc.reflink = Pubkey::new(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
     }
     
-    ctx.accounts.reflink.close(ctx.accounts.wallet.to_account_info())
+    ctx.accounts.reflink.close(ctx.accounts.wallet.to_account_info()).expect("could not close reflink account");
+    ctx.accounts.market_account.owned_reflink = Pubkey::new(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
+
+    Ok(())
 }

@@ -26,6 +26,8 @@ pub struct OrbitMarketAccount{
     pub reflink: Pubkey,
     pub dispute_discounts: u16,
 
+    // for transferring and shit
     pub owned_reflink: Pubkey,
-    pub transfer_struct: Pubkey
+    pub transfer_struct: Pubkey,
+    pub vendor_catalog: Pubkey
 }
