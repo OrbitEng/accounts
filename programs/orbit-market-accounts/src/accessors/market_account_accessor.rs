@@ -21,7 +21,7 @@ pub struct CreateMarketAccount<'info>{
         ],
         bump
     )]
-    pub market_account: Account<'info, OrbitMarketAccount>,
+    pub market_account:Box<Account<'info, OrbitMarketAccount>>,
 
     #[account(mut)]
     pub wallet: Signer<'info>,
@@ -71,7 +71,7 @@ pub struct AddReflink<'info>{
         ],
         bump
     )]
-    pub market_account: Account<'info, OrbitMarketAccount>,
+    pub market_account:Box<Account<'info, OrbitMarketAccount>>,
 
     #[account(
         mut,
@@ -102,7 +102,7 @@ pub struct RemoveReflink<'info>{
         ],
         bump
     )]
-    pub market_account: Account<'info, OrbitMarketAccount>,
+    pub market_account:Box<Account<'info, OrbitMarketAccount>>,
 
     #[account(
         mut,
@@ -139,7 +139,7 @@ pub struct InitDigitalVendorCatalog<'info>{
         mut,
         constraint = market_account.digital_vendor_catalog == Pubkey::new(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
     )]
-    pub market_account: Account<'info, OrbitMarketAccount>,
+    pub market_account:Box<Account<'info, OrbitMarketAccount>>,
 
     #[account(
         seeds = [
@@ -172,7 +172,7 @@ pub struct InitPhysicalVendorCatalog<'info>{
         mut,
         constraint = market_account.physical_vendor_catalog == Pubkey::new(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
     )]
-    pub market_account: Account<'info, OrbitMarketAccount>,
+    pub market_account:Box<Account<'info, OrbitMarketAccount>>,
 
     #[account(
         seeds = [
@@ -205,7 +205,7 @@ pub struct InitCommissionVendorCatalog<'info>{
         mut,
         constraint = market_account.commission_vendor_catalog == Pubkey::new(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
     )]
-    pub market_account: Account<'info, OrbitMarketAccount>,
+    pub market_account:Box<Account<'info, OrbitMarketAccount>>,
 
     #[account(
         seeds = [
@@ -246,7 +246,7 @@ pub struct UpdateAccountFieldUser<'info>{
         ],
         bump
     )]
-    pub market_account: Account<'info, OrbitMarketAccount>,
+    pub market_account:Box<Account<'info, OrbitMarketAccount>>,
 
     #[account(
         address = market_account.wallet
@@ -266,7 +266,7 @@ pub fn update_profile_image_handler(ctx: Context<UpdateAccountFieldUser>, new_li
 #[derive(Accounts)]
 pub struct PostTxContext<'info>{
     #[account(mut)]
-    pub market_account: Account<'info, OrbitMarketAccount>,
+    pub market_account:Box<Account<'info, OrbitMarketAccount>>,
 
     #[account(
         seeds = [
