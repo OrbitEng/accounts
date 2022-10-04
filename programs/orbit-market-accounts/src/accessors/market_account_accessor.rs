@@ -57,6 +57,10 @@ pub fn create_account_handler(ctx: Context<CreateMarketAccount>, pfp_link: Strin
     Ok(())
 }
 
+
+/// REFLINK HELPERS
+
+
 #[derive(Accounts)]
 pub struct AddReflink<'info>{
     #[account(
@@ -124,6 +128,10 @@ pub fn remove_reflink_handler(ctx: Context<RemoveReflink>) -> Result<()>{
     
     Ok(())
 }
+
+
+/// CATALOG HELPERS
+
 
 #[derive(Accounts)]
 pub struct InitDigitalVendorCatalog<'info>{
@@ -224,6 +232,10 @@ pub fn add_commission_vendor_catalog_handler(ctx: Context<InitCommissionVendorCa
     Ok(())
 }
 
+
+/// PFP
+
+
 #[derive(Accounts)]
 pub struct UpdateAccountFieldUser<'info>{
     #[account(
@@ -246,6 +258,10 @@ pub fn update_profile_image_handler(ctx: Context<UpdateAccountFieldUser>, new_li
     ctx.accounts.market_account.profile_pic = new_link;
     Ok(())
 }
+
+
+/// POST TX CPI'S
+
 
 #[derive(Accounts)]
 pub struct PostTxContext<'info>{

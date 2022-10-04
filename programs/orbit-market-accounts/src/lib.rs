@@ -41,6 +41,18 @@ pub mod orbit_market_accounts {
         submit_rating_handler(ctx, rating)
     }
 
+    /// CATALOGS
+    
+    pub fn add_digital_vendor_catalog(ctx: Context<InitDigitalVendorCatalog>) -> Result<()> {
+        add_digital_vendor_catalog_handler(ctx)
+    }
+    pub fn add_physical_vendor_catalog(ctx: Context<InitPhysicalVendorCatalog>) -> Result<()> {
+        add_physical_vendor_catalog_handler(ctx)
+    }
+    pub fn add_commission_vendor_catalog(ctx: Context<InitCommissionVendorCatalog>) -> Result<()> {
+        add_commission_vendor_catalog_handler(ctx)
+    }
+
     /// TRANSFERS
     
     pub fn initiate_transfer(ctx: Context<InitTransfer>) -> Result<()>{
