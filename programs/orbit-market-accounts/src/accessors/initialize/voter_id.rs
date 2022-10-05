@@ -23,6 +23,8 @@ pub struct CreateVoterIdStruct<'info>{
     pub system_program: Program<'info, System>
 }
 
-pub fn initialize_voter_id_handler(_ctx: Context<CreateVoterIdStruct>) -> Result<()>{
+pub fn initialize_voter_id_handler(ctx: Context<CreateVoterIdStruct>) -> Result<()>{
+    // reserve 0 for special cases
+    ctx.accounts.voter_id_struct.current_voters = 1;
     Ok(())
 }
