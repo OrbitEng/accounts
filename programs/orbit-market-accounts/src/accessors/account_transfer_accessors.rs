@@ -109,13 +109,17 @@ pub struct ConfirmTransfer<'info>{
 
 pub fn account_transfer_confirm(ctx: Context<ConfirmTransfer>) -> Result<()> {
     // transfer all the data
-    ctx.accounts.source_market_account.transactions = ctx.accounts.source_market_account.transactions;
-    ctx.accounts.source_market_account.account_created = ctx.accounts.source_market_account.account_created;
-    ctx.accounts.source_market_account.reputation = ctx.accounts.source_market_account.reputation;
-    ctx.accounts.source_market_account.metadata = ctx.accounts.source_market_account.metadata.clone();
-    ctx.accounts.source_market_account.profile_pic = ctx.accounts.source_market_account.profile_pic.clone();
-    ctx.accounts.source_market_account.reflink = ctx.accounts.source_market_account.reflink;
-    ctx.accounts.source_market_account.dispute_discounts = ctx.accounts.source_market_account.dispute_discounts;
+    ctx.accounts.destination_market_account.transactions = ctx.accounts.source_market_account.transactions;
+    ctx.accounts.destination_market_account.account_created = ctx.accounts.source_market_account.account_created;
+    ctx.accounts.destination_market_account.reputation = ctx.accounts.source_market_account.reputation;
+    ctx.accounts.destination_market_account.metadata = ctx.accounts.source_market_account.metadata.clone();
+    ctx.accounts.destination_market_account.profile_pic = ctx.accounts.source_market_account.profile_pic.clone();
+    ctx.accounts.destination_market_account.reflink = ctx.accounts.source_market_account.reflink;
+    ctx.accounts.destination_market_account.dispute_discounts = ctx.accounts.source_market_account.dispute_discounts;
+    ctx.accounts.destination_market_account.voter_id = ctx.accounts.source_market_account.voter_id;
+    ctx.accounts.destination_market_account.digital_vendor_catalog = ctx.accounts.source_market_account.digital_vendor_catalog;
+    ctx.accounts.destination_market_account.physical_vendor_catalog = ctx.accounts.source_market_account.physical_vendor_catalog;
+    ctx.accounts.destination_market_account.commission_vendor_catalog = ctx.accounts.source_market_account.commission_vendor_catalog;
 
     if ctx.remaining_accounts.len() == 1{
         let mut reflink = Account::<OrbitReflink>::try_from(&ctx.remaining_accounts[0]).expect("did not pass in a reflink account");
@@ -130,11 +134,7 @@ pub fn account_transfer_confirm(ctx: Context<ConfirmTransfer>) -> Result<()> {
     // close old account to old wallet
     ctx.accounts.source_market_account.close(ctx.accounts.source_wallet.to_account_info()).expect("could not close old market account");
     ctx.accounts.transfer_request.close(ctx.accounts.source_wallet.to_account_info()).expect("could not close transfer struct");
-
     ctx.accounts.destination_market_account.transfer_struct = Pubkey::new(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
-    ctx.accounts.destination_market_account.digital_vendor_catalog = ctx.accounts.source_market_account.digital_vendor_catalog;
-    ctx.accounts.destination_market_account.physical_vendor_catalog = ctx.accounts.source_market_account.physical_vendor_catalog;
-    ctx.accounts.destination_market_account.commission_vendor_catalog = ctx.accounts.source_market_account.commission_vendor_catalog;
     Ok(())
 }
 

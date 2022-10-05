@@ -77,4 +77,12 @@ pub mod orbit_market_accounts {
     pub fn delete_reflink(ctx: Context<DeleteReflink>) -> Result<()>{
         delete_reflink_handler(ctx)
     }
+
+
+    ////////////////////
+    /// PROGRAM INIT UTILS
+    
+    pub fn initialize_voter_struct(ctx: Context<CreateVoterIdStruct>) -> Result<()>{
+        initialize_voter_id_handler(ctx)
+    }
 }

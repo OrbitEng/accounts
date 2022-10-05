@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use crate::{
     structs::market_account::OrbitMarketAccount,
-    OrbitReflink
+    OrbitReflink, VoterId
 };
 use orbit_addresses::{
     PHYSICAL_ADDRESS,
@@ -23,6 +23,15 @@ pub struct CreateMarketAccount<'info>{
     )]
     pub market_account:Box<Account<'info, OrbitMarketAccount>>,
 
+    #[account(
+        mut,
+        seeds = [
+            b"orbit_voters"
+        ],
+        bump
+    )]
+    pub voter_id_struct: Account<'info, VoterId>,
+
     #[account(mut)]
     pub wallet: Signer<'info>,
 
@@ -36,6 +45,9 @@ pub fn create_account_handler(ctx: Context<CreateMarketAccount>, pfp_link: Strin
     ctx.accounts.market_account.account_created = clock.unix_timestamp;
     ctx.accounts.market_account.metadata = metadata_link;
     ctx.accounts.market_account.profile_pic = pfp_link;
+
+    ctx.accounts.market_account.voter_id = ctx.accounts.voter_id_struct.current_voters;
+    ctx.accounts.voter_id_struct.current_voters += 1;
 
     // 人之初，性本善。性相近，习相远
     ctx.accounts.market_account.reputation = [0; 5];

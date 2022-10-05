@@ -9,3 +9,6 @@ pub use reflink_struct::*;
 
 pub mod account_transfer;
 pub use account_transfer::*;
+
+pub mod voter_id;
+pub use voter_id::*;
