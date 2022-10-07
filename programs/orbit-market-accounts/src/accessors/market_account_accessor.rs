@@ -1,11 +1,12 @@
-use anchor_lang::{prelude::*, system_program};
+use anchor_lang::prelude::*;
 use crate::{
     structs::market_account::OrbitMarketAccount,
-    errors::MarketAccountErrors, OrbitReflink
+    OrbitReflink, VoterId
 };
 use orbit_addresses::{
     PHYSICAL_ADDRESS,
-    DIGITAL_ADDRESS
+    DIGITAL_ADDRESS,
+    COMMISSION_ADDRESS
 };
 
 #[derive(Accounts)]
@@ -13,35 +14,49 @@ pub struct CreateMarketAccount<'info>{
     #[account(
         init,
         space = 400, // metadata should be of len 44. profile pic url is variable
-        payer = payer
+        payer = wallet,
+        seeds = [
+            b"orbit_account",
+            wallet.key().as_ref()
+        ],
+        bump
     )]
-    pub market_account: Account<'info, OrbitMarketAccount>,
+    pub market_account:Box<Account<'info, OrbitMarketAccount>>,
+
+    #[account(
+        mut,
+        seeds = [
+            b"orbit_voters"
+        ],
+        bump
+    )]
+    pub voter_id_struct: Account<'info, VoterId>,
 
     #[account(mut)]
-    pub payer: Signer<'info>,
-
-    pub master_auth: Signer<'info>,
+    pub wallet: Signer<'info>,
 
     pub system_program: Program<'info, System>
 }
 
-pub fn create_account_handler(ctx: Context<CreateMarketAccount>, metadata_link: String, payer_as_wallet: bool) -> Result<()>{
-    if ctx.accounts.master_auth.owner.key() != system_program::ID{
-        return err!(MarketAccountErrors::InvalidMasterPubkey)
-    };
+pub fn create_account_handler(ctx: Context<CreateMarketAccount>, pfp_link: String, metadata_link: String) -> Result<()>{
     let clock = Clock::get().expect("Could not get CLOCK SYSVAR");
 
-    if payer_as_wallet{
-        ctx.accounts.market_account.wallet = ctx.accounts.payer.key();
-    }
-
-    ctx.accounts.market_account.master_pubkey = ctx.accounts.master_auth.key();
+    ctx.accounts.market_account.wallet = ctx.accounts.wallet.key();
     ctx.accounts.market_account.account_created = clock.unix_timestamp;
-    ctx.accounts.market_account.metadata = metadata_link.into_bytes();
+    ctx.accounts.market_account.metadata = metadata_link;
+    ctx.accounts.market_account.profile_pic = pfp_link;
+
+    ctx.accounts.market_account.voter_id = ctx.accounts.voter_id_struct.current_voters;
+    ctx.accounts.voter_id_struct.current_voters += 1;
 
     // 人之初，性本善。性相近，习相远
     ctx.accounts.market_account.reputation = [0; 5];
     ctx.accounts.market_account.transactions = 0;
+    ctx.accounts.market_account.owned_reflink = Pubkey::new(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
+    ctx.accounts.market_account.transfer_struct = Pubkey::new(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
+    ctx.accounts.market_account.digital_vendor_catalog = Pubkey::new(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
+    ctx.accounts.market_account.physical_vendor_catalog = Pubkey::new(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
+    ctx.accounts.market_account.commission_vendor_catalog = Pubkey::new(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
 
     if ctx.remaining_accounts.len() == 1{
         let mut reflink_acc = Account::<OrbitReflink>::try_from(&ctx.remaining_accounts[0].to_account_info()).expect("reflink does not exist");
@@ -54,29 +69,21 @@ pub fn create_account_handler(ctx: Context<CreateMarketAccount>, metadata_link: 
     Ok(())
 }
 
-#[derive(Accounts)]
-pub struct SetWallet<'info>{
-    #[account(mut)]
-    pub market_account: Account<'info, OrbitMarketAccount>,
 
-    /// CHECK: New wallet must sign. This is for the safety of the users
-    pub new_wallet: Signer<'info>,
+/// REFLINK HELPERS
 
-    #[account(
-        address = market_account.master_pubkey
-    )]
-    pub change_authority: Signer<'info>
-}
-
-pub fn set_wallet_handler(ctx: Context<SetWallet>) -> Result<()>{
-    ctx.accounts.market_account.wallet = ctx.accounts.new_wallet.key();
-    Ok(())
-}
 
 #[derive(Accounts)]
 pub struct AddReflink<'info>{
-    #[account(mut)]
-    pub market_account: Account<'info, OrbitMarketAccount>,
+    #[account(
+        mut,
+        seeds = [
+            b"orbit_account",
+            wallet.key().as_ref()
+        ],
+        bump
+    )]
+    pub market_account:Box<Account<'info, OrbitMarketAccount>>,
 
     #[account(
         mut,
@@ -85,37 +92,193 @@ pub struct AddReflink<'info>{
     pub reflink: Account<'info, OrbitReflink>,
 
     #[account(
-        address = market_account.master_pubkey
+        address = market_account.wallet
     )]
-    pub change_authority: Signer<'info>
+    pub wallet: Signer<'info>
 }
 
 pub fn add_reflink_handler(ctx: Context<AddReflink>) -> Result<()>{
     ctx.accounts.market_account.reflink = ctx.accounts.reflink.key();
     ctx.accounts.reflink.uses += 1;
+    ctx.accounts.reflink.users.push(ctx.accounts.market_account.key());
     Ok(())
 }
 
 #[derive(Accounts)]
-pub struct UpdateAccountFieldUser<'info>{
-    #[account(mut)]
-    pub market_account: Account<'info, OrbitMarketAccount>,
+pub struct RemoveReflink<'info>{
+    #[account(
+        mut,
+        seeds = [
+            b"orbit_account",
+            wallet.key().as_ref()
+        ],
+        bump
+    )]
+    pub market_account:Box<Account<'info, OrbitMarketAccount>>,
 
     #[account(
-        address = market_account.master_pubkey
+        mut,
+        address = market_account.reflink
     )]
-    pub change_authority: Signer<'info>
+    pub reflink: Account<'info, OrbitReflink>,
+
+    #[account(
+        address = market_account.wallet
+    )]
+    pub wallet: Signer<'info>
+}
+
+pub fn remove_reflink_handler(ctx: Context<RemoveReflink>) -> Result<()>{
+    ctx.accounts.market_account.reflink = Pubkey::new(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
+    ctx.accounts.reflink.uses -= 1;
+    let pos = ctx.accounts.reflink.users.iter().position(|user| user.to_owned() == ctx.accounts.market_account.key()).expect("user not found for reflink");
+    if pos == (ctx.accounts.reflink.users.len()-1){
+        ctx.accounts.reflink.users.drain(pos..);
+    }else{
+        ctx.accounts.reflink.users.drain(pos..pos+1);
+    }
+    
+    Ok(())
+}
+
+
+/// CATALOG HELPERS
+
+
+#[derive(Accounts)]
+pub struct InitDigitalVendorCatalog<'info>{
+    #[account(
+        mut,
+        constraint = market_account.digital_vendor_catalog == Pubkey::new(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
+    )]
+    pub market_account:Box<Account<'info, OrbitMarketAccount>>,
+
+    #[account(
+        seeds = [
+            b"listings_catalog",
+            b"digital",
+            market_account.key().as_ref()
+        ],
+        bump,
+        seeds::program = Pubkey::new(orbit_addresses::CATALOG_ADDRESS),
+
+        constraint = *catalog_struct.owner == Pubkey::new(orbit_addresses::CATALOG_ADDRESS)
+    )]
+    /// CHECK: mandatory safety comment
+    pub catalog_struct: AccountInfo<'info>,
+
+    #[account(
+        address = market_account.wallet
+    )]
+    pub wallet: Signer<'info>
+}
+
+pub fn add_digital_vendor_catalog_handler(ctx: Context<InitDigitalVendorCatalog>) -> Result<()> {
+    ctx.accounts.market_account.digital_vendor_catalog = ctx.accounts.catalog_struct.key();
+    Ok(())
+}
+
+#[derive(Accounts)]
+pub struct InitPhysicalVendorCatalog<'info>{
+    #[account(
+        mut,
+        constraint = market_account.physical_vendor_catalog == Pubkey::new(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
+    )]
+    pub market_account:Box<Account<'info, OrbitMarketAccount>>,
+
+    #[account(
+        seeds = [
+            b"listings_catalog",
+            b"physical",
+            market_account.key().as_ref()
+        ],
+        bump,
+        seeds::program = Pubkey::new(orbit_addresses::CATALOG_ADDRESS),
+
+        constraint = *catalog_struct.owner == Pubkey::new(orbit_addresses::CATALOG_ADDRESS)
+    )]
+    /// CHECK: mandatory safety comment
+    pub catalog_struct: AccountInfo<'info>,
+
+    #[account(
+        address = market_account.wallet
+    )]
+    pub wallet: Signer<'info>
+}
+
+pub fn add_physical_vendor_catalog_handler(ctx: Context<InitPhysicalVendorCatalog>) -> Result<()> {
+    ctx.accounts.market_account.physical_vendor_catalog = ctx.accounts.catalog_struct.key();
+    Ok(())
+}
+
+#[derive(Accounts)]
+pub struct InitCommissionVendorCatalog<'info>{
+    #[account(
+        mut,
+        constraint = market_account.commission_vendor_catalog == Pubkey::new(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
+    )]
+    pub market_account:Box<Account<'info, OrbitMarketAccount>>,
+
+    #[account(
+        seeds = [
+            b"listings_catalog",
+            b"commission",
+            market_account.key().as_ref()
+        ],
+        bump,
+        seeds::program = Pubkey::new(orbit_addresses::CATALOG_ADDRESS),
+
+        constraint = *catalog_struct.owner == Pubkey::new(orbit_addresses::CATALOG_ADDRESS)
+    )]
+    /// CHECK: mandatory safety comment
+    pub catalog_struct: AccountInfo<'info>,
+
+    #[account(
+        address = market_account.wallet
+    )]
+    pub wallet: Signer<'info>
+}
+
+pub fn add_commission_vendor_catalog_handler(ctx: Context<InitCommissionVendorCatalog>) -> Result<()> {
+    ctx.accounts.market_account.commission_vendor_catalog = ctx.accounts.catalog_struct.key();
+    Ok(())
+}
+
+
+/// PFP
+
+
+#[derive(Accounts)]
+pub struct UpdateAccountFieldUser<'info>{
+    #[account(
+        mut,
+        seeds = [
+            b"orbit_account",
+            wallet.key().as_ref()
+        ],
+        bump
+    )]
+    pub market_account:Box<Account<'info, OrbitMarketAccount>>,
+
+    #[account(
+        address = market_account.wallet
+    )]
+    pub wallet: Signer<'info>
 }
 
 pub fn update_profile_image_handler(ctx: Context<UpdateAccountFieldUser>, new_link: String) -> Result<()>{
-    ctx.accounts.market_account.profile_pic = new_link.into_bytes();
+    ctx.accounts.market_account.profile_pic = new_link;
     Ok(())
 }
+
+
+/// POST TX CPI'S
+
 
 #[derive(Accounts)]
 pub struct PostTxContext<'info>{
     #[account(mut)]
-    pub market_account: Account<'info, OrbitMarketAccount>,
+    pub market_account:Box<Account<'info, OrbitMarketAccount>>,
 
     #[account(
         seeds = [
@@ -129,7 +292,8 @@ pub struct PostTxContext<'info>{
     #[account(
         constraint = 
             (caller.key() == Pubkey::new(PHYSICAL_ADDRESS)) ||
-            (caller.key() == Pubkey::new(DIGITAL_ADDRESS))
+            (caller.key() == Pubkey::new(DIGITAL_ADDRESS)) ||
+            (caller.key() == Pubkey::new(COMMISSION_ADDRESS))
     )]
     /// CHECK: we do do checks
     pub caller: AccountInfo<'info>

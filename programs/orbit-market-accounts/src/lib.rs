@@ -17,34 +17,72 @@ pub mod orbit_market_accounts {
     ////////////////////////////////////
     /// ACCOUNT UTILS
     
-    pub fn create_account(ctx: Context<CreateMarketAccount>, metadata_link: String, payer_as_wallet: bool) -> Result<()>{
-        create_account_handler(ctx, metadata_link, payer_as_wallet)
+    pub fn create_account(ctx: Context<CreateMarketAccount>, pfp_link: String, metadata_link: String) -> Result<()>{
+        create_account_handler(ctx, pfp_link, metadata_link)
     }
 
     pub fn update_profile_image(ctx: Context<UpdateAccountFieldUser>, new_link: String) -> Result<()>{
         update_profile_image_handler(ctx, new_link)
     }
 
-    pub fn set_wallet(ctx: Context<SetWallet>) -> Result<()>{
-        set_wallet_handler(ctx)
-
-    }
     pub fn post_tx(ctx: Context<PostTxContext>) -> Result<()>{
         post_tx_handler(ctx)
-
     }
 
+    /// REFLINKS
     pub fn set_reflink(ctx: Context<AddReflink>) -> Result<()>{
         add_reflink_handler(ctx)
+    }
+    pub fn remove_reflink(ctx: Context<RemoveReflink>) -> Result<()>{
+        remove_reflink_handler(ctx)
     }
 
     pub fn submit_rating(ctx: Context<PostTxContext>, rating: usize) -> Result<()>{
         submit_rating_handler(ctx, rating)
     }
+
+    /// CATALOGS
+    
+    pub fn add_digital_vendor_catalog(ctx: Context<InitDigitalVendorCatalog>) -> Result<()> {
+        add_digital_vendor_catalog_handler(ctx)
+    }
+    pub fn add_physical_vendor_catalog(ctx: Context<InitPhysicalVendorCatalog>) -> Result<()> {
+        add_physical_vendor_catalog_handler(ctx)
+    }
+    pub fn add_commission_vendor_catalog(ctx: Context<InitCommissionVendorCatalog>) -> Result<()> {
+        add_commission_vendor_catalog_handler(ctx)
+    }
+
+    /// TRANSFERS
+    
+    pub fn initiate_transfer(ctx: Context<InitTransfer>) -> Result<()>{
+        account_transfer_init(ctx)
+    }
+
+    pub fn confirm_transfer(ctx: Context<ConfirmTransfer>) -> Result<()> {
+        account_transfer_confirm(ctx)
+    }
+
+    pub fn decline_transfer(ctx: Context<DeclineTransfer>) -> Result<()>{
+        account_transfer_decline(ctx)
+    }
+
     /////////////////
     /// REFLINK UTILS
     
     pub fn create_reflink(ctx: Context<CreateReflink>) -> Result<()>{
         init_reflink_handler(ctx)
+    }
+
+    pub fn delete_reflink(ctx: Context<DeleteReflink>) -> Result<()>{
+        delete_reflink_handler(ctx)
+    }
+
+
+    ////////////////////
+    /// PROGRAM INIT UTILS
+    
+    pub fn initialize_voter_struct(ctx: Context<CreateVoterIdStruct>) -> Result<()>{
+        initialize_voter_id_handler(ctx)
     }
 }
