@@ -17,3 +17,11 @@ pub enum MarketAccountErrors{
     #[msg("users passed do not match reflink")]
     MismatchedUsersForReflink,
 }
+
+#[error_code]
+pub enum ReviewErrors{
+    #[msg("reviews can only be from 1 to 5")]
+    RatingOutsideRange,
+    #[msg("You can't provide a review")]
+    InvalidReviewAuthority,
+}

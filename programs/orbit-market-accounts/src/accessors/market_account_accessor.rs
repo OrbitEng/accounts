@@ -13,7 +13,7 @@ use orbit_addresses::{
 pub struct CreateMarketAccount<'info>{
     #[account(
         init,
-        space = 400, // metadata should be of len 44. profile pic url is variable
+        space = 800, // metadata should be of len 44. profile pic url is variable
         payer = wallet,
         seeds = [
             b"orbit_account",
@@ -162,7 +162,7 @@ pub struct InitDigitalVendorCatalog<'info>{
         bump,
         seeds::program = Pubkey::new(orbit_addresses::CATALOG_ADDRESS),
 
-        constraint = *catalog_struct.owner == Pubkey::new(orbit_addresses::CATALOG_ADDRESS)
+        owner = Pubkey::new(orbit_addresses::CATALOG_ADDRESS)
     )]
     /// CHECK: mandatory safety comment
     pub catalog_struct: AccountInfo<'info>,
@@ -195,7 +195,7 @@ pub struct InitPhysicalVendorCatalog<'info>{
         bump,
         seeds::program = Pubkey::new(orbit_addresses::CATALOG_ADDRESS),
 
-        constraint = *catalog_struct.owner == Pubkey::new(orbit_addresses::CATALOG_ADDRESS)
+        owner = Pubkey::new(orbit_addresses::CATALOG_ADDRESS)
     )]
     /// CHECK: mandatory safety comment
     pub catalog_struct: AccountInfo<'info>,
@@ -228,7 +228,7 @@ pub struct InitCommissionVendorCatalog<'info>{
         bump,
         seeds::program = Pubkey::new(orbit_addresses::CATALOG_ADDRESS),
 
-        constraint = *catalog_struct.owner == Pubkey::new(orbit_addresses::CATALOG_ADDRESS)
+        owner = Pubkey::new(orbit_addresses::CATALOG_ADDRESS)
     )]
     /// CHECK: mandatory safety comment
     pub catalog_struct: AccountInfo<'info>,
