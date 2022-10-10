@@ -16,6 +16,8 @@ pub enum MarketAccountErrors{
     MismatchedReflink,
     #[msg("users passed do not match reflink")]
     MismatchedUsersForReflink,
+    #[msg("invalid seed string for struct")]
+    InvalidSeedString
 }
 
 #[error_code]

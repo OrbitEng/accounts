@@ -22,7 +22,7 @@ pub struct OrbitMarketAccount{
     pub profile_pic: String, // 43
 
     // reflink account of referrer // 33
-    pub reflink: Pubkey,
+    pub used_reflink: Pubkey,
     pub dispute_discounts: u8,
 
     // for transferring and shit // 64
@@ -31,15 +31,15 @@ pub struct OrbitMarketAccount{
     pub transfer_struct: Pubkey,
 
     // 300
-    pub digital_vendor_catalog: Pubkey,
-    pub physical_vendor_catalog: Pubkey,
-    pub commission_vendor_catalog: Pubkey,
+    pub digital_listings: Pubkey,
+    pub physical_listings: Pubkey,
+    pub commission_listings: Pubkey,
 
-    pub buyer_open_digital_transactions: Pubkey,
-    pub buyer_open_physical_transactions: Pubkey,
-    pub buyer_open_commission_transactions: Pubkey,
+    pub buyer_digital_transactions: Pubkey,
+    pub buyer_physical_transactions: Pubkey,
+    pub buyer_commission_transactions: Pubkey,
 
-    pub seller_open_digital_transactions: Pubkey,
-    pub seller_open_physical_transactions: Pubkey,
-    pub seller_open_commission_transactions: Pubkey,
+    pub seller_digital_transactions: Pubkey,
+    pub seller_physical_transactions: Pubkey,
+    pub seller_commission_transactions: Pubkey,
 }

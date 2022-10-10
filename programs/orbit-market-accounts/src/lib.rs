@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-declare_id!("EyNn3f8bEaMTofYnbjUecUGQHuGdkfppWjFs5bPfaBd2");
+declare_id!("7AwGcaYA8SC32T5kcv5q4u9HhY49a7cNAAp8CpcbibFq");
 
 pub mod accessors;
 pub mod structs;
@@ -29,7 +29,7 @@ pub mod orbit_market_accounts {
         post_tx_handler(ctx)
     }
 
-    /// REFLINKS
+    ////// REFLINKS
     pub fn set_reflink(ctx: Context<AddReflink>) -> Result<()>{
         add_reflink_handler(ctx)
     }
@@ -41,19 +41,43 @@ pub mod orbit_market_accounts {
         submit_rating_handler(ctx, rating)
     }
 
-    /// CATALOGS
+    ////// LISTINGS
     
-    pub fn add_digital_vendor_catalog(ctx: Context<InitDigitalVendorCatalog>) -> Result<()> {
-        add_digital_vendor_catalog_handler(ctx)
+    pub fn add_vendor_physical_listings(ctx: Context<InitVendorListings>, market_type: String) -> Result<()> {
+        add_vendor_physical_listings_handler(ctx, market_type)
     }
-    pub fn add_physical_vendor_catalog(ctx: Context<InitPhysicalVendorCatalog>) -> Result<()> {
-        add_physical_vendor_catalog_handler(ctx)
+    pub fn add_vendor_digital_listings(ctx: Context<InitVendorListings>, market_type: String) -> Result<()> {
+        add_vendor_digital_listings_handler(ctx, market_type)
     }
-    pub fn add_commission_vendor_catalog(ctx: Context<InitCommissionVendorCatalog>) -> Result<()> {
-        add_commission_vendor_catalog_handler(ctx)
+    pub fn add_vendor_commission_listings(ctx: Context<InitVendorListings>, market_type: String) -> Result<()> {
+        add_vendor_commission_listings_handler(ctx, market_type)
     }
 
-    /// TRANSFERS
+    ///////// TRANSACTION LOGS
+    /// : BUYER
+    pub fn add_buyer_physical_transactions(ctx: Context<InitBuyerTransactionsLog>, market_type: String) -> Result<()>{
+        add_buyer_physical_transactions_handler(ctx, market_type)
+    }
+    pub fn add_buyer_digital_transactions(ctx: Context<InitBuyerTransactionsLog>, market_type: String) -> Result<()>{
+        add_buyer_digital_transactions_handler(ctx, market_type)
+    }
+    pub fn add_buyer_commission_transactions(ctx: Context<InitBuyerTransactionsLog>, market_type: String) -> Result<()>{
+        add_buyer_commission_transactions_handler(ctx, market_type)
+    }
+
+    
+    /// :SELLER
+    pub fn add_seller_physical_transactions(ctx: Context<InitSellerTransactionsLog>, market_type: String) -> Result<()>{
+        add_seller_physical_transactions_handler(ctx, market_type)
+    }
+    pub fn add_seller_digital_transactions(ctx: Context<InitSellerTransactionsLog>, market_type: String) -> Result<()>{
+        add_seller_digital_transactions_handler(ctx, market_type)
+    }
+    pub fn add_seller_commission_transactions(ctx: Context<InitSellerTransactionsLog>, market_type: String) -> Result<()>{
+        add_seller_commission_transactions_handler(ctx, market_type)
+    }
+
+    ///////// TRANSFERS
     
     pub fn initiate_transfer(ctx: Context<InitTransfer>) -> Result<()>{
         account_transfer_init(ctx)
@@ -76,6 +100,10 @@ pub mod orbit_market_accounts {
 
     pub fn delete_reflink(ctx: Context<DeleteReflink>) -> Result<()>{
         delete_reflink_handler(ctx)
+    }
+
+    pub fn transfer_reflink(ctx: Context<TransferReflink>) -> Result<()>{
+        transfer_reflink_handler(ctx)
     }
 
 

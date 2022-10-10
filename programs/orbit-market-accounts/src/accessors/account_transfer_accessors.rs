@@ -1,5 +1,8 @@
 use anchor_lang::{prelude::*, AccountsClose};
-use crate::{structs::AccountTransfer, OrbitMarketAccount, MarketAccountErrors, OrbitReflink};
+use crate::{
+    AccountTransfer,
+    OrbitMarketAccount
+};
 
 #[derive(Accounts)]
 pub struct InitTransfer<'info>{
@@ -114,22 +117,19 @@ pub fn account_transfer_confirm(ctx: Context<ConfirmTransfer>) -> Result<()> {
     ctx.accounts.destination_market_account.reputation = ctx.accounts.source_market_account.reputation;
     ctx.accounts.destination_market_account.metadata = ctx.accounts.source_market_account.metadata.clone();
     ctx.accounts.destination_market_account.profile_pic = ctx.accounts.source_market_account.profile_pic.clone();
-    ctx.accounts.destination_market_account.reflink = ctx.accounts.source_market_account.reflink;
+    ctx.accounts.destination_market_account.used_reflink = ctx.accounts.source_market_account.used_reflink;
     ctx.accounts.destination_market_account.dispute_discounts = ctx.accounts.source_market_account.dispute_discounts;
     ctx.accounts.destination_market_account.voter_id = ctx.accounts.source_market_account.voter_id;
-    ctx.accounts.destination_market_account.digital_vendor_catalog = ctx.accounts.source_market_account.digital_vendor_catalog;
-    ctx.accounts.destination_market_account.physical_vendor_catalog = ctx.accounts.source_market_account.physical_vendor_catalog;
-    ctx.accounts.destination_market_account.commission_vendor_catalog = ctx.accounts.source_market_account.commission_vendor_catalog;
-
-    if ctx.remaining_accounts.len() == 1{
-        let mut reflink = Account::<OrbitReflink>::try_from(&ctx.remaining_accounts[0]).expect("did not pass in a reflink account");
-        if (reflink.owner != ctx.accounts.source_market_account.key()) || (ctx.accounts.source_market_account.owned_reflink != ctx.remaining_accounts[0].key()){
-            return err!(MarketAccountErrors::MismatchedReflink);
-        }
-
-        reflink.owner = ctx.accounts.destination_market_account.key();
-        ctx.accounts.destination_market_account.owned_reflink = ctx.accounts.source_market_account.owned_reflink;
-    }
+    ctx.accounts.destination_market_account.digital_listings = ctx.accounts.source_market_account.digital_listings;
+    ctx.accounts.destination_market_account.physical_listings = ctx.accounts.source_market_account.physical_listings;
+    ctx.accounts.destination_market_account.commission_listings = ctx.accounts.source_market_account.commission_listings;
+    ctx.accounts.destination_market_account.buyer_digital_transactions = ctx.accounts.source_market_account.buyer_digital_transactions;
+    ctx.accounts.destination_market_account.buyer_physical_transactions = ctx.accounts.source_market_account.buyer_physical_transactions;
+    ctx.accounts.destination_market_account.buyer_commission_transactions = ctx.accounts.source_market_account.buyer_commission_transactions;
+    ctx.accounts.destination_market_account.seller_digital_transactions = ctx.accounts.source_market_account.seller_digital_transactions;
+    ctx.accounts.destination_market_account.seller_physical_transactions = ctx.accounts.source_market_account.seller_physical_transactions;
+    ctx.accounts.destination_market_account.seller_commission_transactions = ctx.accounts.source_market_account.seller_commission_transactions;
+    ctx.accounts.destination_market_account.owned_reflink = ctx.accounts.source_market_account.owned_reflink;
 
     // close old account to old wallet
     ctx.accounts.source_market_account.close(ctx.accounts.source_wallet.to_account_info()).expect("could not close old market account");

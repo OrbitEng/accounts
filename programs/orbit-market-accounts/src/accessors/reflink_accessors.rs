@@ -10,10 +10,9 @@ pub struct CreateReflink<'info>{
         space = 400,
         seeds = [
             b"orbit_reflink",
-            market_account.key().as_ref()
+            wallet.key().as_ref()
         ],
         bump,
-
         payer = wallet
     )]
     pub reflink: Account<'info, OrbitReflink>,
@@ -43,7 +42,7 @@ pub struct CreateReflink<'info>{
 
 pub fn init_reflink_handler(ctx: Context<CreateReflink>) -> Result<()>{
     ctx.accounts.reflink.uses = 0;
-    ctx.accounts.reflink.owner = ctx.accounts.market_account.key();
+    ctx.accounts.reflink.reflink_owner = ctx.accounts.wallet.key();
     ctx.accounts.market_account.owned_reflink = ctx.accounts.reflink.key();
     Ok(())
 }
@@ -51,25 +50,20 @@ pub fn init_reflink_handler(ctx: Context<CreateReflink>) -> Result<()>{
 #[derive(Accounts)]
 pub struct DeleteReflink<'info>{
     #[account(
-        mut
+        mut,
+        address = market_account.owned_reflink
     )]
     pub reflink: Account<'info, OrbitReflink>,
 
     #[account(
         mut,
-        address = reflink.owner,
-        seeds = [
-            b"orbit_account",
-            wallet.key().as_ref()
-        ],
-        bump
+        has_one = wallet
     )]
-    pub market_account:Box<Account<'info, OrbitMarketAccount>>,
-
+    pub market_account: Account<'info, OrbitMarketAccount>,
     
     #[account(
         mut,
-        address = market_account.wallet
+        address = reflink.reflink_owner
     )]
     pub wallet: Signer<'info>
 }
@@ -85,11 +79,30 @@ pub fn delete_reflink_handler(ctx: Context<DeleteReflink>) -> Result<()>{
         };
 
         let mut user_acc = Account::<OrbitMarketAccount>::try_from(&ctx.remaining_accounts[user.0]).expect(format!("could not deserialize user account {:?}", user.0).as_str());
-        user_acc.reflink = Pubkey::new(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
+        user_acc.used_reflink = Pubkey::new(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
+        ctx.remaining_accounts[user.0].exit(&crate::ID)?;
     }
     
     ctx.accounts.reflink.close(ctx.accounts.wallet.to_account_info()).expect("could not close reflink account");
     ctx.accounts.market_account.owned_reflink = Pubkey::new(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
 
+    Ok(())
+}
+
+#[derive(Accounts)]
+pub struct TransferReflink<'info>{
+    #[account(mut)]
+    pub reflink_struct: Account<'info, OrbitReflink>,
+
+    pub new_address: SystemAccount<'info>,
+
+    #[account(
+        address = reflink_struct.reflink_owner
+    )]
+    pub wallet: Signer<'info>,
+}
+
+pub fn transfer_reflink_handler(ctx: Context<TransferReflink>) -> Result<()>{
+    ctx.accounts.reflink_struct.reflink_owner = ctx.accounts.new_address.key();
     Ok(())
 }

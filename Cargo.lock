@@ -165,6 +165,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "anchor-spl"
+version = "0.25.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d65904c3106851f6d1bb87d504044764819d69c51d2b4346d59d399d8afa7d18"
+dependencies = [
+ "anchor-lang",
+ "solana-program",
+ "spl-associated-token-account",
+ "spl-token",
+]
+
+[[package]]
 name = "anchor-syn"
 version = "0.25.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -293,7 +305,7 @@ checksum = "6441c552f230375d18e3cc377677914d2ca2b0d36e52129fe15450a2dce46775"
 dependencies = [
  "borsh-derive-internal",
  "borsh-schema-derive-internal",
- "proc-macro-crate",
+ "proc-macro-crate 0.1.5",
  "proc-macro2",
  "syn",
 ]
@@ -645,9 +657,9 @@ dependencies = [
 
 [[package]]
 name = "itoa"
-version = "1.0.3"
+version = "1.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6c8af84674fe1f223a982c933a0ee1086ac4d4052aa0fb8060c12c6ad838e754"
+checksum = "4217ad341ebadf8d8e724e264f13e593e0648f5b3e94b3896a5df283be015ecc"
 
 [[package]]
 name = "js-sys"
@@ -749,6 +761,8 @@ version = "0.1.0"
 dependencies = [
  "anchor-lang",
  "orbit-addresses",
+ "orbit-product",
+ "orbit-transaction",
 ]
 
 [[package]]
@@ -806,6 +820,27 @@ dependencies = [
 ]
 
 [[package]]
+name = "num_enum"
+version = "0.5.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cf5395665662ef45796a4ff5486c5d41d29e0c09640af4c5f17fd94ee2c119c9"
+dependencies = [
+ "num_enum_derive",
+]
+
+[[package]]
+name = "num_enum_derive"
+version = "0.5.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3b0498641e53dd6ac1a4f22547548caa6864cc4933784319cd1775271c5a46ce"
+dependencies = [
+ "proc-macro-crate 1.2.1",
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "once_cell"
 version = "1.15.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -820,9 +855,36 @@ checksum = "624a8340c38c1b80fd549087862da4ba43e08858af025b236e509b6649fc13d5"
 [[package]]
 name = "orbit-addresses"
 version = "0.1.0"
-source = "git+https://github.com/OrbitEng/addresses#31cb79c9b4061e29c34d97ce6d4de563635dc548"
+source = "git+https://github.com/OrbitEng/addresses#a8e5f9b6b2b0906c1db7aec74dbc065aec77306a"
 dependencies = [
  "anchor-lang",
+]
+
+[[package]]
+name = "orbit-derive-product"
+version = "0.1.0"
+source = "git+https://github.com/OrbitEng/product#5425b57200d7f6208aaeedca76b82778db62d9d7"
+dependencies = [
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "orbit-product"
+version = "0.1.0"
+source = "git+https://github.com/OrbitEng/product#5425b57200d7f6208aaeedca76b82778db62d9d7"
+dependencies = [
+ "anchor-lang",
+ "orbit-derive-product",
+]
+
+[[package]]
+name = "orbit-transaction"
+version = "0.1.0"
+source = "git+https://github.com/OrbitEng/transaction#60b7dc4aa44934e7c589ab71a4efcbe5e06a4498"
+dependencies = [
+ "anchor-lang",
+ "anchor-spl",
 ]
 
 [[package]]
@@ -860,6 +922,17 @@ version = "0.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1d6ea3c4595b96363c13943497db34af4460fb474a95c43f4446ad341b8c9785"
 dependencies = [
+ "toml",
+]
+
+[[package]]
+name = "proc-macro-crate"
+version = "1.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "eda0fc3b0fb7c975631757e14d9049da17374063edb6ebbcbc54d880d4fe94e9"
+dependencies = [
+ "once_cell",
+ "thiserror",
  "toml",
 ]
 
@@ -1064,9 +1137,9 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.85"
+version = "1.0.86"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e55a28e3aaef9d5ce0506d0a14dbba8054ddc7e499ef522dd8b26859ec9d4a44"
+checksum = "41feea4228a6f1cd09ec7a3593a682276702cd67b5273544757dae23c096f074"
 dependencies = [
  "itoa",
  "ryu",
@@ -1213,6 +1286,32 @@ dependencies = [
 ]
 
 [[package]]
+name = "spl-associated-token-account"
+version = "1.0.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2b013067447a1396303ddfc294f36e3d260a32f8a16c501c295bcdc7de39b490"
+dependencies = [
+ "borsh",
+ "solana-program",
+ "spl-token",
+]
+
+[[package]]
+name = "spl-token"
+version = "3.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "32d05653bed5932064a287340dbc8a3cb298ee717e5c7ec3353d7cdb9f8fb7e1"
+dependencies = [
+ "arrayref",
+ "bytemuck",
+ "num-derive",
+ "num-traits",
+ "num_enum",
+ "solana-program",
+ "thiserror",
+]
+
+[[package]]
 name = "subtle"
 version = "2.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1220,9 +1319,9 @@ checksum = "6bdef32e8150c2a081110b42772ffe7d7c9032b606bc226c8260fd97e0976601"
 
 [[package]]
 name = "syn"
-version = "1.0.101"
+version = "1.0.102"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e90cde112c4b9690b8cbe810cba9ddd8bc1d7472e2cae317b69e9438c1cba7d2"
+checksum = "3fcd952facd492f9be3ef0d0b7032a6e442ee9b361d4acc2b1d0c4aaa5f613a1"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1266,9 +1365,9 @@ checksum = "dcf81ac59edc17cc8697ff311e8f5ef2d99fcbd9817b34cec66f90b6c3dfd987"
 
 [[package]]
 name = "unicode-ident"
-version = "1.0.4"
+version = "1.0.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dcc811dc4066ac62f84f11307873c4850cb653bfa9b1719cee2bd2204a4bc5dd"
+checksum = "6ceab39d59e4c9499d4e5a8ee0e2735b891bb7308ac83dfb4e80cad195c9f6f3"
 
 [[package]]
 name = "unicode-segmentation"
