@@ -28,7 +28,7 @@ pub struct InitTransfer<'info>{
         bump,
         constraint = source_market_account.transfer_struct == Pubkey::new(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
     )]
-    pub source_market_account:Box<Account<'info, OrbitMarketAccount>>,
+    pub source_market_account: Box<Account<'info, OrbitMarketAccount>>,
 
     #[account(
         mut,
@@ -44,7 +44,7 @@ pub struct InitTransfer<'info>{
         bump,
         constraint = destination_market_account.transfer_struct == Pubkey::new(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
     )]
-    pub destination_market_account:Box<Account<'info, OrbitMarketAccount>>,
+    pub destination_market_account: Box<Account<'info, OrbitMarketAccount>>,
 
     #[account(
         address = destination_market_account.wallet
@@ -75,7 +75,7 @@ pub struct ConfirmTransfer<'info>{
         bump,
         constraint = source_market_account.transfer_struct == transfer_request.key()
     )]
-    pub source_market_account:Box<Account<'info, OrbitMarketAccount>>,
+    pub source_market_account: Box<Account<'info, OrbitMarketAccount>>,
 
     #[account(
         mut,
@@ -91,7 +91,7 @@ pub struct ConfirmTransfer<'info>{
         bump,
         constraint = destination_market_account.transfer_struct == transfer_request.key()
     )]
-    pub destination_market_account:Box<Account<'info, OrbitMarketAccount>>,
+    pub destination_market_account: Box<Account<'info, OrbitMarketAccount>>,
 
     #[account(
         address = destination_market_account.wallet
@@ -149,7 +149,7 @@ pub struct DeclineTransfer<'info>{
         bump,
         constraint = source_market_account.transfer_struct == transfer_request.key()
     )]
-    pub source_market_account:Box<Account<'info, OrbitMarketAccount>>,
+    pub source_market_account: Box<Account<'info, OrbitMarketAccount>>,
 
     #[account(
         mut,
@@ -166,7 +166,7 @@ pub struct DeclineTransfer<'info>{
         bump,
         constraint = destination_market_account.transfer_struct == transfer_request.key()
     )]
-    pub destination_market_account:Box<Account<'info, OrbitMarketAccount>>,
+    pub destination_market_account: Box<Account<'info, OrbitMarketAccount>>,
 
     #[account(
         address = destination_market_account.wallet

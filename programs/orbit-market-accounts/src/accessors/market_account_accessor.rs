@@ -26,7 +26,7 @@ pub struct CreateMarketAccount<'info>{
         ],
         bump
     )]
-    pub market_account:Box<Account<'info, OrbitMarketAccount>>,
+    pub market_account: Box<Account<'info, OrbitMarketAccount>>,
 
     #[account(
         mut,
@@ -86,7 +86,7 @@ pub struct UpdateAccountFieldUser<'info>{
         ],
         bump
     )]
-    pub market_account:Box<Account<'info, OrbitMarketAccount>>,
+    pub market_account: Box<Account<'info, OrbitMarketAccount>>,
 
     #[account(
         address = market_account.wallet
@@ -117,7 +117,7 @@ pub struct AddReflink<'info>{
         ],
         bump
     )]
-    pub market_account:Box<Account<'info, OrbitMarketAccount>>,
+    pub market_account: Box<Account<'info, OrbitMarketAccount>>,
 
     #[account(
         mut,
@@ -148,7 +148,7 @@ pub struct RemoveReflink<'info>{
         ],
         bump
     )]
-    pub market_account:Box<Account<'info, OrbitMarketAccount>>,
+    pub market_account: Box<Account<'info, OrbitMarketAccount>>,
 
     #[account(
         mut,
@@ -185,7 +185,7 @@ pub struct InitVendorListings<'info>{
         mut,
         has_one = wallet
     )]
-    pub market_account:Box<Account<'info, OrbitMarketAccount>>,
+    pub market_account: Box<Account<'info, OrbitMarketAccount>>,
 
     #[account(
         mut,
@@ -241,7 +241,7 @@ pub struct InitBuyerTransactionsLog<'info>{
         mut,
         has_one = wallet
     )]
-    pub market_account:Box<Account<'info, OrbitMarketAccount>>,
+    pub market_account: Box<Account<'info, OrbitMarketAccount>>,
 
     #[account(
         mut,
@@ -330,7 +330,7 @@ pub struct InitSellerTransactionsLog<'info>{
         mut,
         has_one = wallet
     )]
-    pub market_account:Box<Account<'info, OrbitMarketAccount>>,
+    pub market_account: Box<Account<'info, OrbitMarketAccount>>,
 
     #[account(
         mut,
@@ -412,9 +412,12 @@ pub fn add_seller_commission_transactions_handler(ctx: Context<InitSellerTransac
 /// POST TX CPI'S
 
 #[derive(Accounts)]
-pub struct PostTxContext<'info>{
+pub struct PostTxIncrementContext<'info>{
     #[account(mut)]
-    pub market_account:Box<Account<'info, OrbitMarketAccount>>,
+    pub buyer_account: Box<Account<'info, OrbitMarketAccount>>,
+
+    #[account(mut)]
+    pub seller_account: Box<Account<'info, OrbitMarketAccount>>,
 
     #[account(
         seeds = [
@@ -436,12 +439,38 @@ pub struct PostTxContext<'info>{
     pub caller: AccountInfo<'info>
 }
 
-pub fn post_tx_handler(ctx: Context<PostTxContext>) -> Result<()>{
-    ctx.accounts.market_account.transactions += 1;
+pub fn post_tx_handler(ctx: Context<PostTxIncrementContext>) -> Result<()>{
+    ctx.accounts.buyer_account.transactions += 1;
+    ctx.accounts.seller_account.transactions += 1;
     Ok(())
 }
 
-pub fn submit_rating_handler(ctx: Context<PostTxContext>, rating: usize) -> Result<()>{
+#[derive(Accounts)]
+pub struct SubmitRatingContext<'info>{
+    #[account(mut)]
+    pub market_account: Box<Account<'info, OrbitMarketAccount>>,
+
+    #[account(
+        seeds = [
+            b"market_authority"
+        ],
+        bump,
+        seeds::program = caller.key()
+    )]
+    pub caller_auth: Signer<'info>,
+
+    #[account(
+        executable,
+        constraint = 
+            (caller.key().to_bytes() == PHYSICAL_ADDRESS) ||
+            (caller.key().to_bytes() == DIGITAL_ADDRESS) ||
+            (caller.key().to_bytes() == COMMISSION_ADDRESS)
+    )]
+    /// CHECK: we do basic checks
+    pub caller: AccountInfo<'info>
+}
+
+pub fn submit_rating_handler(ctx: Context<SubmitRatingContext>, rating: usize) -> Result<()>{
     ctx.accounts.market_account.reputation[rating] += 1;
     Ok(())
 }

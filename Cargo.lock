@@ -684,9 +684,9 @@ checksum = "e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646"
 
 [[package]]
 name = "libc"
-version = "0.2.134"
+version = "0.2.135"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "329c933548736bc49fd575ee68c89e8be4d260064184389a5b77517cddd99ffb"
+checksum = "68783febc7782c6c5cb401fbda4de5a9898be1762314da0bb2c10ced61f18b0c"
 
 [[package]]
 name = "libsecp256k1"
@@ -855,7 +855,7 @@ checksum = "624a8340c38c1b80fd549087862da4ba43e08858af025b236e509b6649fc13d5"
 [[package]]
 name = "orbit-addresses"
 version = "0.1.0"
-source = "git+https://github.com/OrbitEng/addresses#a8e5f9b6b2b0906c1db7aec74dbc065aec77306a"
+source = "git+https://github.com/OrbitEng/addresses#7ff0a0b4ed7cf0c9358612d08e1224079de16110"
 dependencies = [
  "anchor-lang",
 ]
@@ -881,7 +881,7 @@ dependencies = [
 [[package]]
 name = "orbit-transaction"
 version = "0.1.0"
-source = "git+https://github.com/OrbitEng/transaction#60b7dc4aa44934e7c589ab71a4efcbe5e06a4498"
+source = "git+https://github.com/OrbitEng/transaction#8885ff82071b2ce4786fa074818e1a8be3e58d3a"
 dependencies = [
  "anchor-lang",
  "anchor-spl",

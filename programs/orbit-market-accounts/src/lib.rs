@@ -25,8 +25,12 @@ pub mod orbit_market_accounts {
         update_profile_image_handler(ctx, new_link)
     }
 
-    pub fn post_tx(ctx: Context<PostTxContext>) -> Result<()>{
+    pub fn post_tx(ctx: Context<PostTxIncrementContext>) -> Result<()>{
         post_tx_handler(ctx)
+    }
+
+    pub fn submit_rating(ctx: Context<SubmitRatingContext>, rating: usize) -> Result<()>{
+        submit_rating_handler(ctx, rating)
     }
 
     ////// REFLINKS
@@ -35,10 +39,6 @@ pub mod orbit_market_accounts {
     }
     pub fn remove_reflink(ctx: Context<RemoveReflink>) -> Result<()>{
         remove_reflink_handler(ctx)
-    }
-
-    pub fn submit_rating(ctx: Context<PostTxContext>, rating: usize) -> Result<()>{
-        submit_rating_handler(ctx, rating)
     }
 
     ////// LISTINGS
