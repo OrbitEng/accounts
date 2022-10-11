@@ -855,7 +855,7 @@ checksum = "624a8340c38c1b80fd549087862da4ba43e08858af025b236e509b6649fc13d5"
 [[package]]
 name = "orbit-addresses"
 version = "0.1.0"
-source = "git+https://github.com/OrbitEng/addresses#7ff0a0b4ed7cf0c9358612d08e1224079de16110"
+source = "git+https://github.com/OrbitEng/addresses#1e54eee9be87c30c78e7576e8711c56f7c6f3516"
 dependencies = [
  "anchor-lang",
 ]
@@ -863,7 +863,7 @@ dependencies = [
 [[package]]
 name = "orbit-derive-product"
 version = "0.1.0"
-source = "git+https://github.com/OrbitEng/product#5425b57200d7f6208aaeedca76b82778db62d9d7"
+source = "git+https://github.com/OrbitEng/product#7ad935a6cfe5b20b22ea82f7b95ba1aa9993eb68"
 dependencies = [
  "quote",
  "syn",
@@ -872,19 +872,21 @@ dependencies = [
 [[package]]
 name = "orbit-product"
 version = "0.1.0"
-source = "git+https://github.com/OrbitEng/product#5425b57200d7f6208aaeedca76b82778db62d9d7"
+source = "git+https://github.com/OrbitEng/product#7ad935a6cfe5b20b22ea82f7b95ba1aa9993eb68"
 dependencies = [
  "anchor-lang",
+ "orbit-addresses",
  "orbit-derive-product",
 ]
 
 [[package]]
 name = "orbit-transaction"
 version = "0.1.0"
-source = "git+https://github.com/OrbitEng/transaction#8885ff82071b2ce4786fa074818e1a8be3e58d3a"
+source = "git+https://github.com/OrbitEng/transaction#126059085128825f99cccd1935d92876da4f71f6"
 dependencies = [
  "anchor-lang",
  "anchor-spl",
+ "orbit-addresses",
 ]
 
 [[package]]
