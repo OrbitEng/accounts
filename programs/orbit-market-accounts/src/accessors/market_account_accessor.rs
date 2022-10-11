@@ -62,6 +62,7 @@ pub fn create_account_handler(ctx: Context<CreateMarketAccount>, pfp_link: Strin
     ctx.accounts.market_account.digital_listings = Pubkey::new(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
     ctx.accounts.market_account.physical_listings = Pubkey::new(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
     ctx.accounts.market_account.commission_listings = Pubkey::new(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
+    ctx.accounts.market_account.dispute_discounts = 0;
 
     if ctx.remaining_accounts.len() == 1{
         let mut reflink_acc = Account::<OrbitReflink>::try_from(&ctx.remaining_accounts[0].to_account_info()).expect("reflink does not exist");
@@ -446,7 +447,7 @@ pub fn post_tx_handler(ctx: Context<PostTxIncrementContext>) -> Result<()>{
 }
 
 #[derive(Accounts)]
-pub struct SubmitRatingContext<'info>{
+pub struct MarketAccountUpdateInternal<'info>{
     #[account(mut)]
     pub market_account: Box<Account<'info, OrbitMarketAccount>>,
 
@@ -470,7 +471,17 @@ pub struct SubmitRatingContext<'info>{
     pub caller: AccountInfo<'info>
 }
 
-pub fn submit_rating_handler(ctx: Context<SubmitRatingContext>, rating: usize) -> Result<()>{
+pub fn submit_rating_handler(ctx: Context<MarketAccountUpdateInternal>, rating: usize) -> Result<()>{
     ctx.accounts.market_account.reputation[rating] += 1;
+    Ok(())
+}
+
+pub fn increment_dispute_discounts_handler(ctx: Context<MarketAccountUpdateInternal>) -> Result<()>{
+    ctx.accounts.market_account.dispute_discounts += 1;
+    Ok(())
+}
+
+pub fn decrement_dispute_discounts_handler(ctx: Context<MarketAccountUpdateInternal>) -> Result<()>{
+    ctx.accounts.market_account.dispute_discounts -= 1;
     Ok(())
 }

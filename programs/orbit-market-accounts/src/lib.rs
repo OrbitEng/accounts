@@ -29,8 +29,18 @@ pub mod orbit_market_accounts {
         post_tx_handler(ctx)
     }
 
-    pub fn submit_rating(ctx: Context<SubmitRatingContext>, rating: usize) -> Result<()>{
+    pub fn submit_rating(ctx: Context<MarketAccountUpdateInternal>, rating: usize) -> Result<()>{
         submit_rating_handler(ctx, rating)
+    }
+
+    ////// DISPUTE
+    
+    pub fn increment_dispute_discounts(ctx: Context<MarketAccountUpdateInternal>) -> Result<()>{
+        increment_dispute_discounts_handler(ctx)
+    }
+
+    pub fn decrement_dispute_discounts(ctx: Context<MarketAccountUpdateInternal>) -> Result<()>{
+        decrement_dispute_discounts_handler(ctx)
     }
 
     ////// REFLINKS
