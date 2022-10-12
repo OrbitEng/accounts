@@ -43,6 +43,10 @@ pub mod orbit_market_accounts {
         decrement_dispute_discounts_handler(ctx)
     }
 
+    pub fn increment_dispute_discounts_multiple(ctx: Context<MarketAccountUpdateInternal>) -> Result<()>{
+        increment_dispute_discounts_multiple_handler(ctx)
+    }
+
     ////// REFLINKS
     pub fn set_reflink(ctx: Context<AddReflink>) -> Result<()>{
         add_reflink_handler(ctx)
