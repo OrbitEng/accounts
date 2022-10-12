@@ -43,7 +43,7 @@ pub mod orbit_market_accounts {
         decrement_dispute_discounts_handler(ctx)
     }
 
-    pub fn increment_dispute_discounts_multiple(ctx: Context<MarketAccountUpdateInternal>) -> Result<()>{
+    pub fn increment_dispute_discounts_multiple(ctx: Context<MarketAccountMultipleUpdateInternal>) -> Result<()>{
         increment_dispute_discounts_multiple_handler(ctx)
     }
 

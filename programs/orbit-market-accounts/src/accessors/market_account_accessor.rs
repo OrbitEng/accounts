@@ -482,17 +482,40 @@ pub fn increment_dispute_discounts_handler(ctx: Context<MarketAccountUpdateInter
     Ok(())
 }
 
-pub fn increment_dispute_discounts_multiple_handler(ctx: Context<MarketAccountUpdateInternal>) -> Result<()>{
+pub fn decrement_dispute_discounts_handler(ctx: Context<MarketAccountUpdateInternal>) -> Result<()>{
+    ctx.accounts.market_account.dispute_discounts -= 1;
+    Ok(())
+}
+
+#[derive(Accounts)]
+pub struct MarketAccountMultipleUpdateInternal<'info>{
+
+    #[account(
+        seeds = [
+            b"market_authority"
+        ],
+        bump,
+        seeds::program = caller.key()
+    )]
+    pub caller_auth: Signer<'info>,
+
+    #[account(
+        executable,
+        constraint = 
+            (caller.key().to_bytes() == PHYSICAL_ADDRESS) ||
+            (caller.key().to_bytes() == DIGITAL_ADDRESS) ||
+            (caller.key().to_bytes() == COMMISSION_ADDRESS) ||
+            (caller.key().to_bytes() == DISPUTE_ADDRESS)
+    )]
+    /// CHECK: we do basic checks
+    pub caller: AccountInfo<'info>
+}
+
+pub fn increment_dispute_discounts_multiple_handler(ctx: Context<MarketAccountMultipleUpdateInternal>) -> Result<()>{
     for market_acc in ctx.remaining_accounts{
         let mut ma = Account::<OrbitMarketAccount>::try_from(market_acc).expect("could not deserialize remaining account");
         ma.dispute_discounts += 1;
         market_acc.exit(&crate::ID)?;
     }
-    ctx.accounts.market_account.dispute_discounts += 1;
-    Ok(())
-}
-
-pub fn decrement_dispute_discounts_handler(ctx: Context<MarketAccountUpdateInternal>) -> Result<()>{
-    ctx.accounts.market_account.dispute_discounts -= 1;
     Ok(())
 }
