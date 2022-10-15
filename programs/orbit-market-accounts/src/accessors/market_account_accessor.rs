@@ -191,15 +191,14 @@ pub struct InitVendorListings<'info>{
     #[account(
         mut,
         seeds = [
-            b"listings_catalog",
+            b"vendor_listings",
             market_type.as_bytes(),
             wallet.key().as_ref()
         ],
         bump,
         seeds::program = orbit_product::ID
     )]
-    /// CHECK: prelim checks
-    pub listings_struct: AccountInfo<'info>,
+    pub listings_struct: SystemAccount<'info>,
 
     #[account(
         mut,
@@ -286,8 +285,7 @@ pub struct InitBuyerTransactionsLog<'info>{
         bump,
         seeds::program = orbit_transaction::ID
     )]
-    /// CHECK: prelim checks
-    pub transactions_log: AccountInfo<'info>,
+    pub transactions_log: SystemAccount<'info>,
 
     #[account(
         mut,
@@ -377,8 +375,7 @@ pub struct InitSellerTransactionsLog<'info>{
         bump,
         seeds::program = orbit_transaction::ID
     )]
-    /// CHECK: prelim checks
-    pub transactions_log: AccountInfo<'info>,
+    pub transactions_log: SystemAccount<'info>,
 
     #[account(
         mut,
