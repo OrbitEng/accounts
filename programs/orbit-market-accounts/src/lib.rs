@@ -25,6 +25,10 @@ pub mod orbit_market_accounts {
         update_profile_image_handler(ctx, new_link)
     }
 
+    pub fn update_metadata(ctx: Context<UpdateAccountFieldUser>, metadata: String) -> Result<()>{
+        update_metadata_handler(ctx, metadata)
+    }
+
     pub fn post_tx(ctx: Context<PostTxIncrementContext>) -> Result<()>{
         post_tx_handler(ctx)
     }
