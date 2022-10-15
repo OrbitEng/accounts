@@ -198,7 +198,8 @@ pub struct InitVendorListings<'info>{
         bump,
         seeds::program = orbit_product::ID
     )]
-    pub listings_struct: SystemAccount<'info>,
+    /// CHECK: prelim checks
+    pub listings_struct: AccountInfo<'info>,
 
     #[account(
         mut,
@@ -285,9 +286,11 @@ pub struct InitBuyerTransactionsLog<'info>{
         bump,
         seeds::program = orbit_transaction::ID
     )]
-    pub transactions_log: SystemAccount<'info>,
+    /// CHECK: prelim checks
+    pub transactions_log: AccountInfo<'info>,
 
     #[account(
+        mut,
         address = market_account.wallet
     )]
     pub wallet: Signer<'info>,
@@ -374,9 +377,11 @@ pub struct InitSellerTransactionsLog<'info>{
         bump,
         seeds::program = orbit_transaction::ID
     )]
-    pub transactions_log: SystemAccount<'info>,
+    /// CHECK: prelim checks
+    pub transactions_log: AccountInfo<'info>,
 
     #[account(
+        mut,
         address = market_account.wallet
     )]
     pub wallet: Signer<'info>,
