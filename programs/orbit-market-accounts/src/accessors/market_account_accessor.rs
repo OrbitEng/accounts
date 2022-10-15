@@ -213,6 +213,16 @@ pub fn add_vendor_physical_listings_handler(ctx: Context<InitVendorListings>, ma
         return err!(MarketAccountErrors::InvalidSeedString)
     }
     ctx.accounts.market_account.physical_listings = ctx.accounts.listings_struct.key();
+    orbit_product::cpi::init_vendor_listings(
+        CpiContext::new(
+            ctx.accounts.product_program.to_account_info(),
+            orbit_product::cpi::accounts::CreateVendorListing{
+                vendor_listings: ctx.accounts.listings_struct.to_account_info(),
+                wallet: ctx.accounts.wallet.to_account_info(),
+                system_program: ctx.accounts.system_program.to_account_info()
+            }
+        ), 
+        market_type)?;
     Ok(())
 }
 pub fn add_vendor_digital_listings_handler(ctx: Context<InitVendorListings>, market_type: String) -> Result<()> {
@@ -220,6 +230,16 @@ pub fn add_vendor_digital_listings_handler(ctx: Context<InitVendorListings>, mar
         return err!(MarketAccountErrors::InvalidSeedString)
     }
     ctx.accounts.market_account.digital_listings = ctx.accounts.listings_struct.key();
+    orbit_product::cpi::init_vendor_listings(
+        CpiContext::new(
+            ctx.accounts.product_program.to_account_info(),
+            orbit_product::cpi::accounts::CreateVendorListing{
+                vendor_listings: ctx.accounts.listings_struct.to_account_info(),
+                wallet: ctx.accounts.wallet.to_account_info(),
+                system_program: ctx.accounts.system_program.to_account_info()
+            }
+        ), 
+        market_type)?;
     Ok(())
 }
 pub fn add_vendor_commission_listings_handler(ctx: Context<InitVendorListings>, market_type: String) -> Result<()> {
@@ -227,6 +247,16 @@ pub fn add_vendor_commission_listings_handler(ctx: Context<InitVendorListings>, 
         return err!(MarketAccountErrors::InvalidSeedString)
     }
     ctx.accounts.market_account.commission_listings = ctx.accounts.listings_struct.key();
+    orbit_product::cpi::init_vendor_listings(
+        CpiContext::new(
+            ctx.accounts.product_program.to_account_info(),
+            orbit_product::cpi::accounts::CreateVendorListing{
+                vendor_listings: ctx.accounts.listings_struct.to_account_info(),
+                wallet: ctx.accounts.wallet.to_account_info(),
+                system_program: ctx.accounts.system_program.to_account_info()
+            }
+        ), 
+        market_type)?;
     Ok(())
 }
 
