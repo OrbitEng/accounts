@@ -201,6 +201,7 @@ pub struct InitVendorListings<'info>{
     pub listings_struct: SystemAccount<'info>,
 
     #[account(
+        mut,
         address = market_account.wallet
     )]
     pub wallet: Signer<'info>,
