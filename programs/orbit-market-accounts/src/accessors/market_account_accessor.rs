@@ -212,7 +212,7 @@ pub fn add_vendor_physical_listings_handler(ctx: Context<InitVendorListings>, ma
     if market_type != "physical"{
         return err!(MarketAccountErrors::InvalidSeedString)
     }
-    ctx.accounts.market_account.digital_listings = ctx.accounts.listings_struct.key();
+    ctx.accounts.market_account.physical_listings = ctx.accounts.listings_struct.key();
     Ok(())
 }
 pub fn add_vendor_digital_listings_handler(ctx: Context<InitVendorListings>, market_type: String) -> Result<()> {
@@ -226,7 +226,7 @@ pub fn add_vendor_commission_listings_handler(ctx: Context<InitVendorListings>, 
     if market_type != "commission"{
         return err!(MarketAccountErrors::InvalidSeedString)
     }
-    ctx.accounts.market_account.digital_listings = ctx.accounts.listings_struct.key();
+    ctx.accounts.market_account.commission_listings = ctx.accounts.listings_struct.key();
     Ok(())
 }
 
