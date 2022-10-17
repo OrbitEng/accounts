@@ -863,7 +863,7 @@ dependencies = [
 [[package]]
 name = "orbit-derive-product"
 version = "0.1.0"
-source = "git+https://github.com/OrbitEng/product#1768bbf23cd3a6140d764ae9f2a22fa5414401d6"
+source = "git+https://github.com/OrbitEng/product#72258798a984255960335982300210f5dd97ce67"
 dependencies = [
  "quote",
  "syn",
@@ -872,7 +872,7 @@ dependencies = [
 [[package]]
 name = "orbit-product"
 version = "0.1.0"
-source = "git+https://github.com/OrbitEng/product#1768bbf23cd3a6140d764ae9f2a22fa5414401d6"
+source = "git+https://github.com/OrbitEng/product#72258798a984255960335982300210f5dd97ce67"
 dependencies = [
  "anchor-lang",
  "orbit-addresses",
