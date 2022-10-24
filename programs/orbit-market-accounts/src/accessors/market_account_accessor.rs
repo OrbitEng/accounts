@@ -312,7 +312,7 @@ pub fn add_buyer_physical_transactions_handler(ctx: Context<InitBuyerTransaction
         ),
         market_type
     )?;
-    ctx.accounts.market_account.physical_listings = ctx.accounts.transactions_log.key();
+    ctx.accounts.market_account.buyer_physical_transactions = ctx.accounts.transactions_log.key();
     Ok(())
 }
 
@@ -331,7 +331,7 @@ pub fn add_buyer_digital_transactions_handler(ctx: Context<InitBuyerTransactions
         ),
         market_type
     )?;
-    ctx.accounts.market_account.digital_listings = ctx.accounts.transactions_log.key();
+    ctx.accounts.market_account.buyer_digital_transactions = ctx.accounts.transactions_log.key();
     Ok(())
 }
 
@@ -350,7 +350,7 @@ pub fn add_buyer_commission_transactions_handler(ctx: Context<InitBuyerTransacti
         ),
         market_type
     )?;
-    ctx.accounts.market_account.commission_listings = ctx.accounts.transactions_log.key();
+    ctx.accounts.market_account.buyer_commission_transactions = ctx.accounts.transactions_log.key();
     Ok(())
 }
 
