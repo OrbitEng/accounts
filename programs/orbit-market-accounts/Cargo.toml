@@ -18,5 +18,3 @@ default = []
 [dependencies]
 anchor-lang = "0.25.0"
 orbit-addresses = {git = "https://github.com/OrbitEng/addresses"}
-orbit-product = {git = "https://github.com/OrbitEng/product", features=["cpi"]}
-orbit-transaction = {git = "https://github.com/OrbitEng/transaction", features=["cpi"]}

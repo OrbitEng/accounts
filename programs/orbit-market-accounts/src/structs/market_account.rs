@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-
+// todo: v2 change to account loader. allows zero copy
 #[account]
 pub struct OrbitMarketAccount{
     // note: pubkey is just [u8; 32]
@@ -31,15 +31,15 @@ pub struct OrbitMarketAccount{
     pub transfer_struct: Pubkey,
 
     // 300
-    pub digital_listings: Pubkey,
-    pub physical_listings: Pubkey,
-    pub commission_listings: Pubkey,
+    pub digital_listings: bool,
+    pub physical_listings: bool,
+    pub commission_listings: bool,
 
-    pub buyer_digital_transactions: Pubkey,
-    pub buyer_physical_transactions: Pubkey,
-    pub buyer_commission_transactions: Pubkey,
+    pub buyer_digital_transactions: bool,
+    pub buyer_physical_transactions: bool,
+    pub buyer_commission_transactions: bool,
 
-    pub seller_digital_transactions: Pubkey,
-    pub seller_physical_transactions: Pubkey,
-    pub seller_commission_transactions: Pubkey,
+    pub seller_digital_transactions: bool,
+    pub seller_physical_transactions: bool,
+    pub seller_commission_transactions: bool,
 }

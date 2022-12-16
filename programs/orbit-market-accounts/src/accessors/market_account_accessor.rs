@@ -8,10 +8,10 @@ use crate::{
 use orbit_addresses::{
     PHYSICAL_ADDRESS,
     DIGITAL_ADDRESS,
-    COMMISSION_ADDRESS, DISPUTE_ADDRESS
+    COMMISSION_ADDRESS, DISPUTE_ADDRESS,
+    PRODUCT_ADDRESS,
+    TRANSACTION_ADDRESS
 };
-use orbit_product::program::OrbitProduct;
-use orbit_transaction::program::OrbitTransaction;
 
 ////////////////////////////////////////////////
 /// GENERAL
@@ -51,9 +51,9 @@ pub fn create_account_handler(ctx: Context<CreateMarketAccount>, pfp_link: Strin
     ctx.accounts.market_account.transactions = 0;
     ctx.accounts.market_account.owned_reflink = Pubkey::new(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
     ctx.accounts.market_account.transfer_struct = Pubkey::new(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
-    ctx.accounts.market_account.digital_listings = Pubkey::new(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
-    ctx.accounts.market_account.physical_listings = Pubkey::new(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
-    ctx.accounts.market_account.commission_listings = Pubkey::new(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
+    ctx.accounts.market_account.digital_listings = false;
+    ctx.accounts.market_account.physical_listings = false;
+    ctx.accounts.market_account.commission_listings = false;
     ctx.accounts.market_account.dispute_discounts = 0;
 
     if ctx.remaining_accounts.len() == 1{
@@ -182,22 +182,15 @@ pub struct InitVendorListings<'info>{
 
     #[account(
         mut,
-        seeds = [
-            b"vendor_listings",
-            market_type.as_bytes(),
-            wallet.key().as_ref()
-        ],
-        bump,
-        seeds::program = orbit_product::ID
-    )]
-    pub listings_struct: SystemAccount<'info>,
-
-    #[account(
-        mut,
         address = market_account.wallet
     )]
     pub wallet: Signer<'info>,
-    pub product_program: Program<'info, OrbitProduct>,
+
+    #[account(
+        executable,
+        address = Pubkey::new(PRODUCT_ADDRESS)
+    )]
+    pub product_program: AccountInfo<'info>,
     pub system_program: Program<'info, System>
 }
 
@@ -205,51 +198,21 @@ pub fn add_vendor_physical_listings_handler(ctx: Context<InitVendorListings>, ma
     if market_type != "physical"{
         return err!(MarketAccountErrors::InvalidSeedString)
     }
-    ctx.accounts.market_account.physical_listings = ctx.accounts.listings_struct.key();
-    orbit_product::cpi::init_vendor_listings(
-        CpiContext::new(
-            ctx.accounts.product_program.to_account_info(),
-            orbit_product::cpi::accounts::CreateVendorListing{
-                vendor_listings: ctx.accounts.listings_struct.to_account_info(),
-                wallet: ctx.accounts.wallet.to_account_info(),
-                system_program: ctx.accounts.system_program.to_account_info()
-            }
-        ), 
-        market_type)?;
+    ctx.accounts.market_account.physical_listings = true;
     Ok(())
 }
 pub fn add_vendor_digital_listings_handler(ctx: Context<InitVendorListings>, market_type: String) -> Result<()> {
     if market_type != "digital"{
         return err!(MarketAccountErrors::InvalidSeedString)
     }
-    ctx.accounts.market_account.digital_listings = ctx.accounts.listings_struct.key();
-    orbit_product::cpi::init_vendor_listings(
-        CpiContext::new(
-            ctx.accounts.product_program.to_account_info(),
-            orbit_product::cpi::accounts::CreateVendorListing{
-                vendor_listings: ctx.accounts.listings_struct.to_account_info(),
-                wallet: ctx.accounts.wallet.to_account_info(),
-                system_program: ctx.accounts.system_program.to_account_info()
-            }
-        ), 
-        market_type)?;
+    ctx.accounts.market_account.digital_listings = true;
     Ok(())
 }
 pub fn add_vendor_commission_listings_handler(ctx: Context<InitVendorListings>, market_type: String) -> Result<()> {
     if market_type != "commission"{
         return err!(MarketAccountErrors::InvalidSeedString)
     }
-    ctx.accounts.market_account.commission_listings = ctx.accounts.listings_struct.key();
-    orbit_product::cpi::init_vendor_listings(
-        CpiContext::new(
-            ctx.accounts.product_program.to_account_info(),
-            orbit_product::cpi::accounts::CreateVendorListing{
-                vendor_listings: ctx.accounts.listings_struct.to_account_info(),
-                wallet: ctx.accounts.wallet.to_account_info(),
-                system_program: ctx.accounts.system_program.to_account_info()
-            }
-        ), 
-        market_type)?;
+    ctx.accounts.market_account.commission_listings = true;
     Ok(())
 }
 
@@ -269,23 +232,16 @@ pub struct InitBuyerTransactionsLog<'info>{
 
     #[account(
         mut,
-        seeds = [
-            b"buyer_transactions",
-            market_type.as_bytes(),
-            wallet.key().as_ref()
-        ],
-        bump,
-        seeds::program = orbit_transaction::ID
-    )]
-    pub transactions_log: SystemAccount<'info>,
-
-    #[account(
-        mut,
         address = market_account.wallet
     )]
     pub wallet: Signer<'info>,
 
-    pub transactions_program: Program<'info, OrbitTransaction>,
+    #[account(
+        executable,
+        address = Pubkey::new(TRANSACTION_ADDRESS)
+    )]
+    pub transactions_program: AccountInfo<'info>,
+
     pub system_program: Program<'info, System>
 }
 
@@ -293,18 +249,7 @@ pub fn add_buyer_physical_transactions_handler(ctx: Context<InitBuyerTransaction
     if market_type != "physical"{
         return err!(MarketAccountErrors::InvalidSeedString)
     }
-    orbit_transaction::cpi::create_buyer_transactions_log(
-        CpiContext::new(
-            ctx.accounts.transactions_program.to_account_info(),
-            orbit_transaction::cpi::accounts::CreateBuyerLog{
-                transactions_log: ctx.accounts.transactions_log.to_account_info(),
-                wallet: ctx.accounts.wallet.to_account_info(),
-                system_program: ctx.accounts.system_program.to_account_info()
-            }
-        ),
-        market_type
-    )?;
-    ctx.accounts.market_account.buyer_physical_transactions = ctx.accounts.transactions_log.key();
+    ctx.accounts.market_account.buyer_physical_transactions = true;
     Ok(())
 }
 
@@ -312,18 +257,7 @@ pub fn add_buyer_digital_transactions_handler(ctx: Context<InitBuyerTransactions
     if market_type != "digital"{
         return err!(MarketAccountErrors::InvalidSeedString)
     }
-    orbit_transaction::cpi::create_buyer_transactions_log(
-        CpiContext::new(
-            ctx.accounts.transactions_program.to_account_info(),
-            orbit_transaction::cpi::accounts::CreateBuyerLog{
-                transactions_log: ctx.accounts.transactions_log.to_account_info(),
-                wallet: ctx.accounts.wallet.to_account_info(),
-                system_program: ctx.accounts.system_program.to_account_info()
-            }
-        ),
-        market_type
-    )?;
-    ctx.accounts.market_account.buyer_digital_transactions = ctx.accounts.transactions_log.key();
+    ctx.accounts.market_account.buyer_digital_transactions = true;
     Ok(())
 }
 
@@ -331,18 +265,7 @@ pub fn add_buyer_commission_transactions_handler(ctx: Context<InitBuyerTransacti
     if market_type != "commission"{
         return err!(MarketAccountErrors::InvalidSeedString)
     }
-    orbit_transaction::cpi::create_buyer_transactions_log(
-        CpiContext::new(
-            ctx.accounts.transactions_program.to_account_info(),
-            orbit_transaction::cpi::accounts::CreateBuyerLog{
-                transactions_log: ctx.accounts.transactions_log.to_account_info(),
-                wallet: ctx.accounts.wallet.to_account_info(),
-                system_program: ctx.accounts.system_program.to_account_info()
-            }
-        ),
-        market_type
-    )?;
-    ctx.accounts.market_account.buyer_commission_transactions = ctx.accounts.transactions_log.key();
+    ctx.accounts.market_account.buyer_commission_transactions = true;
     Ok(())
 }
 
@@ -359,22 +282,17 @@ pub struct InitSellerTransactionsLog<'info>{
 
     #[account(
         mut,
-        seeds = [
-            b"seller_transactions",
-            market_type.as_bytes(),
-            wallet.key().as_ref()
-        ],
-        bump,
-        seeds::program = orbit_transaction::ID
-    )]
-    pub transactions_log: SystemAccount<'info>,
-
-    #[account(
-        mut,
         address = market_account.wallet
     )]
     pub wallet: Signer<'info>,
-    pub transactions_program: Program<'info, OrbitTransaction>,
+
+    
+    #[account(
+        executable,
+        address = Pubkey::new(TRANSACTION_ADDRESS)
+    )]
+    pub transactions_program: AccountInfo<'info>,
+
     pub system_program: Program<'info, System>
 }
 
@@ -382,18 +300,7 @@ pub fn add_seller_physical_transactions_handler(ctx: Context<InitSellerTransacti
     if market_type != "physical"{
         return err!(MarketAccountErrors::InvalidSeedString)
     }
-    orbit_transaction::cpi::create_seller_transactions_log(
-        CpiContext::new(
-            ctx.accounts.transactions_program.to_account_info(),
-            orbit_transaction::cpi::accounts::CreateSellerLog{
-                transactions_log: ctx.accounts.transactions_log.to_account_info(),
-                wallet: ctx.accounts.wallet.to_account_info(),
-                system_program: ctx.accounts.system_program.to_account_info()
-            }
-        ),
-        market_type
-    )?;
-    ctx.accounts.market_account.seller_physical_transactions = ctx.accounts.transactions_log.key();
+    ctx.accounts.market_account.seller_physical_transactions = true;
     Ok(())
 }
 
@@ -401,18 +308,7 @@ pub fn add_seller_digital_transactions_handler(ctx: Context<InitSellerTransactio
     if market_type != "digital"{
         return err!(MarketAccountErrors::InvalidSeedString)
     }
-    orbit_transaction::cpi::create_seller_transactions_log(
-        CpiContext::new(
-            ctx.accounts.transactions_program.to_account_info(),
-            orbit_transaction::cpi::accounts::CreateSellerLog{
-                transactions_log: ctx.accounts.transactions_log.to_account_info(),
-                wallet: ctx.accounts.wallet.to_account_info(),
-                system_program: ctx.accounts.system_program.to_account_info()
-            }
-        ),
-        market_type
-    )?;
-    ctx.accounts.market_account.seller_digital_transactions = ctx.accounts.transactions_log.key();
+    ctx.accounts.market_account.seller_digital_transactions = true;
     Ok(())
 }
 
@@ -420,18 +316,7 @@ pub fn add_seller_commission_transactions_handler(ctx: Context<InitSellerTransac
     if market_type != "commission"{
         return err!(MarketAccountErrors::InvalidSeedString)
     }
-    orbit_transaction::cpi::create_seller_transactions_log(
-        CpiContext::new(
-            ctx.accounts.transactions_program.to_account_info(),
-            orbit_transaction::cpi::accounts::CreateSellerLog{
-                transactions_log: ctx.accounts.transactions_log.to_account_info(),
-                wallet: ctx.accounts.wallet.to_account_info(),
-                system_program: ctx.accounts.system_program.to_account_info()
-            }
-        ),
-        market_type
-    )?;
-    ctx.accounts.market_account.seller_commission_transactions = ctx.accounts.transactions_log.key();
+    ctx.accounts.market_account.seller_commission_transactions = true;
     Ok(())
 }
 
