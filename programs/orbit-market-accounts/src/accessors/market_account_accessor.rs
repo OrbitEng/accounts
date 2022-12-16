@@ -18,7 +18,7 @@ use orbit_addresses::{
 pub struct CreateMarketAccount<'info>{
     #[account(
         init,
-        space = 800, // metadata should be of len 44. profile pic url is variable
+        space = 500, // metadata should be of len 44. profile pic url is variable
         payer = wallet,
         seeds = [
             b"orbit_account",
