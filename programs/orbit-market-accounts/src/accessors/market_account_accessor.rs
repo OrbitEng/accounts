@@ -3,14 +3,12 @@ use std::convert::TryInto;
 use anchor_lang::prelude::*;
 use crate::{
     structs::market_account::OrbitMarketAccount,
-    OrbitReflink, MarketAccountErrors
+    OrbitReflink
 };
 use orbit_addresses::{
     PHYSICAL_ADDRESS,
     DIGITAL_ADDRESS,
-    COMMISSION_ADDRESS, DISPUTE_ADDRESS,
-    PRODUCT_ADDRESS,
-    TRANSACTION_ADDRESS
+    COMMISSION_ADDRESS, DISPUTE_ADDRESS
 };
 
 ////////////////////////////////////////////////
@@ -169,11 +167,10 @@ pub fn remove_reflink_handler(ctx: Context<RemoveReflink>) -> Result<()>{
 }
 
 //////////////////////////////////////////////////
-/// LISTINGS 
+/// LOGS MODIFIER
 
 #[derive(Accounts)]
-#[instruction(market_type: String)]
-pub struct InitVendorListings<'info>{
+pub struct ModifyAccountLogs<'info>{
     #[account(
         mut,
         has_one = wallet
@@ -184,141 +181,66 @@ pub struct InitVendorListings<'info>{
         mut,
         address = market_account.wallet
     )]
-    pub wallet: Signer<'info>,
-
-    #[account(
-        executable,
-        address = Pubkey::new(PRODUCT_ADDRESS)
-    )]
-    /// CHECK: we do executable and address check
-    pub product_program: AccountInfo<'info>,
-    pub system_program: Program<'info, System>
+    pub wallet: Signer<'info>
 }
 
-pub fn add_vendor_physical_listings_handler(ctx: Context<InitVendorListings>, market_type: String) -> Result<()> {
-    if market_type != "physical"{
-        return err!(MarketAccountErrors::InvalidSeedString)
-    }
+//////////////////////////////////////////////////
+/// LISTINGS 
+
+pub fn add_vendor_physical_listings_handler(ctx: Context<ModifyAccountLogs>) -> Result<()> {
+    
     ctx.accounts.market_account.physical_listings = true;
     Ok(())
 }
-pub fn add_vendor_digital_listings_handler(ctx: Context<InitVendorListings>, market_type: String) -> Result<()> {
-    if market_type != "digital"{
-        return err!(MarketAccountErrors::InvalidSeedString)
-    }
+pub fn add_vendor_digital_listings_handler(ctx: Context<ModifyAccountLogs>) -> Result<()> {
     ctx.accounts.market_account.digital_listings = true;
     Ok(())
 }
-pub fn add_vendor_commission_listings_handler(ctx: Context<InitVendorListings>, market_type: String) -> Result<()> {
-    if market_type != "commission"{
-        return err!(MarketAccountErrors::InvalidSeedString)
-    }
+pub fn add_vendor_commission_listings_handler(ctx: Context<ModifyAccountLogs>) -> Result<()> {
+    
     ctx.accounts.market_account.commission_listings = true;
     Ok(())
 }
 
 //////////////////////////////////////////////////
-///////// TRANSACTIONS LOGS
+///////// TRANSACTIONS
 
 /// :BUYER
 
-#[derive(Accounts)]
-#[instruction(market_type: String)]
-pub struct InitBuyerTransactionsLog<'info>{
-    #[account(
-        mut,
-        has_one = wallet
-    )]
-    pub market_account: Box<Account<'info, OrbitMarketAccount>>,
-
-    #[account(
-        mut,
-        address = market_account.wallet
-    )]
-    pub wallet: Signer<'info>,
-
-    #[account(
-        executable,
-        address = Pubkey::new(TRANSACTION_ADDRESS)
-    )]
-    /// CHECK: we do executable and address check
-    pub transactions_program: AccountInfo<'info>,
-
-    pub system_program: Program<'info, System>
-}
-
-pub fn add_buyer_physical_transactions_handler(ctx: Context<InitBuyerTransactionsLog>, market_type: String) -> Result<()>{
-    if market_type != "physical"{
-        return err!(MarketAccountErrors::InvalidSeedString)
-    }
+pub fn add_buyer_physical_transactions_handler(ctx: Context<ModifyAccountLogs>) -> Result<()>{
+    
     ctx.accounts.market_account.buyer_physical_transactions = true;
     Ok(())
 }
 
-pub fn add_buyer_digital_transactions_handler(ctx: Context<InitBuyerTransactionsLog>, market_type: String) -> Result<()>{
-    if market_type != "digital"{
-        return err!(MarketAccountErrors::InvalidSeedString)
-    }
+pub fn add_buyer_digital_transactions_handler(ctx: Context<ModifyAccountLogs>) -> Result<()>{
+    
     ctx.accounts.market_account.buyer_digital_transactions = true;
     Ok(())
 }
 
-pub fn add_buyer_commission_transactions_handler(ctx: Context<InitBuyerTransactionsLog>, market_type: String) -> Result<()>{
-    if market_type != "commission"{
-        return err!(MarketAccountErrors::InvalidSeedString)
-    }
+pub fn add_buyer_commission_transactions_handler(ctx: Context<ModifyAccountLogs>) -> Result<()>{
+    
     ctx.accounts.market_account.buyer_commission_transactions = true;
     Ok(())
 }
 
 /// :SELLER
 
-#[derive(Accounts)]
-#[instruction(market_type: String)]
-pub struct InitSellerTransactionsLog<'info>{
-    #[account(
-        mut,
-        has_one = wallet
-    )]
-    pub market_account: Box<Account<'info, OrbitMarketAccount>>,
-
-    #[account(
-        mut,
-        address = market_account.wallet
-    )]
-    pub wallet: Signer<'info>,
-
+pub fn add_seller_physical_transactions_handler(ctx: Context<ModifyAccountLogs>) -> Result<()>{
     
-    #[account(
-        executable,
-        address = Pubkey::new(TRANSACTION_ADDRESS)
-    )]
-    /// CHECK: we do executable and address check
-    pub transactions_program: AccountInfo<'info>,
-
-    pub system_program: Program<'info, System>
-}
-
-pub fn add_seller_physical_transactions_handler(ctx: Context<InitSellerTransactionsLog>, market_type: String) -> Result<()>{
-    if market_type != "physical"{
-        return err!(MarketAccountErrors::InvalidSeedString)
-    }
     ctx.accounts.market_account.seller_physical_transactions = true;
     Ok(())
 }
 
-pub fn add_seller_digital_transactions_handler(ctx: Context<InitSellerTransactionsLog>, market_type: String) -> Result<()>{
-    if market_type != "digital"{
-        return err!(MarketAccountErrors::InvalidSeedString)
-    }
+pub fn add_seller_digital_transactions_handler(ctx: Context<ModifyAccountLogs>) -> Result<()>{
+    
     ctx.accounts.market_account.seller_digital_transactions = true;
     Ok(())
 }
 
-pub fn add_seller_commission_transactions_handler(ctx: Context<InitSellerTransactionsLog>, market_type: String) -> Result<()>{
-    if market_type != "commission"{
-        return err!(MarketAccountErrors::InvalidSeedString)
-    }
+pub fn add_seller_commission_transactions_handler(ctx: Context<ModifyAccountLogs>) -> Result<()>{
+    
     ctx.accounts.market_account.seller_commission_transactions = true;
     Ok(())
 }

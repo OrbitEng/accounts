@@ -61,38 +61,38 @@ pub mod orbit_market_accounts {
 
     ////// LISTINGS
     
-    pub fn add_vendor_physical_listings(ctx: Context<InitVendorListings>, market_type: String) -> Result<()> {
-        add_vendor_physical_listings_handler(ctx, market_type)
+    pub fn add_vendor_physical_listings(ctx: Context<ModifyAccountLogs>) -> Result<()> {
+        add_vendor_physical_listings_handler(ctx)
     }
-    pub fn add_vendor_digital_listings(ctx: Context<InitVendorListings>, market_type: String) -> Result<()> {
-        add_vendor_digital_listings_handler(ctx, market_type)
+    pub fn add_vendor_digital_listings(ctx: Context<ModifyAccountLogs>) -> Result<()> {
+        add_vendor_digital_listings_handler(ctx)
     }
-    pub fn add_vendor_commission_listings(ctx: Context<InitVendorListings>, market_type: String) -> Result<()> {
-        add_vendor_commission_listings_handler(ctx, market_type)
+    pub fn add_vendor_commission_listings(ctx: Context<ModifyAccountLogs>) -> Result<()> {
+        add_vendor_commission_listings_handler(ctx)
     }
 
     ///////// TRANSACTION LOGS
     /// : BUYER
-    pub fn add_buyer_physical_transactions(ctx: Context<InitBuyerTransactionsLog>, market_type: String) -> Result<()>{
-        add_buyer_physical_transactions_handler(ctx, market_type)
+    pub fn add_buyer_physical_transactions(ctx: Context<ModifyAccountLogs>) -> Result<()>{
+        add_buyer_physical_transactions_handler(ctx)
     }
-    pub fn add_buyer_digital_transactions(ctx: Context<InitBuyerTransactionsLog>, market_type: String) -> Result<()>{
-        add_buyer_digital_transactions_handler(ctx, market_type)
+    pub fn add_buyer_digital_transactions(ctx: Context<ModifyAccountLogs>) -> Result<()>{
+        add_buyer_digital_transactions_handler(ctx)
     }
-    pub fn add_buyer_commission_transactions(ctx: Context<InitBuyerTransactionsLog>, market_type: String) -> Result<()>{
-        add_buyer_commission_transactions_handler(ctx, market_type)
+    pub fn add_buyer_commission_transactions(ctx: Context<ModifyAccountLogs>) -> Result<()>{
+        add_buyer_commission_transactions_handler(ctx)
     }
 
     
     /// :SELLER
-    pub fn add_seller_physical_transactions(ctx: Context<InitSellerTransactionsLog>, market_type: String) -> Result<()>{
-        add_seller_physical_transactions_handler(ctx, market_type)
+    pub fn add_seller_physical_transactions(ctx: Context<ModifyAccountLogs>) -> Result<()>{
+        add_seller_physical_transactions_handler(ctx)
     }
-    pub fn add_seller_digital_transactions(ctx: Context<InitSellerTransactionsLog>, market_type: String) -> Result<()>{
-        add_seller_digital_transactions_handler(ctx, market_type)
+    pub fn add_seller_digital_transactions(ctx: Context<ModifyAccountLogs>) -> Result<()>{
+        add_seller_digital_transactions_handler(ctx)
     }
-    pub fn add_seller_commission_transactions(ctx: Context<InitSellerTransactionsLog>, market_type: String) -> Result<()>{
-        add_seller_commission_transactions_handler(ctx, market_type)
+    pub fn add_seller_commission_transactions(ctx: Context<ModifyAccountLogs>) -> Result<()>{
+        add_seller_commission_transactions_handler(ctx)
     }
 
     ///////// TRANSFERS
