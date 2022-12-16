@@ -190,6 +190,7 @@ pub struct InitVendorListings<'info>{
         executable,
         address = Pubkey::new(PRODUCT_ADDRESS)
     )]
+    /// CHECK: we do executable and address check
     pub product_program: AccountInfo<'info>,
     pub system_program: Program<'info, System>
 }
@@ -240,6 +241,7 @@ pub struct InitBuyerTransactionsLog<'info>{
         executable,
         address = Pubkey::new(TRANSACTION_ADDRESS)
     )]
+    /// CHECK: we do executable and address check
     pub transactions_program: AccountInfo<'info>,
 
     pub system_program: Program<'info, System>
@@ -291,6 +293,7 @@ pub struct InitSellerTransactionsLog<'info>{
         executable,
         address = Pubkey::new(TRANSACTION_ADDRESS)
     )]
+    /// CHECK: we do executable and address check
     pub transactions_program: AccountInfo<'info>,
 
     pub system_program: Program<'info, System>
