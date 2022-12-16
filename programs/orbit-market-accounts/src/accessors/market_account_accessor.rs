@@ -1,7 +1,9 @@
+use std::convert::TryInto;
+
 use anchor_lang::prelude::*;
 use crate::{
     structs::market_account::OrbitMarketAccount,
-    OrbitReflink, VoterId, MarketAccountErrors
+    OrbitReflink, MarketAccountErrors
 };
 use orbit_addresses::{
     PHYSICAL_ADDRESS,
@@ -28,15 +30,6 @@ pub struct CreateMarketAccount<'info>{
     )]
     pub market_account: Box<Account<'info, OrbitMarketAccount>>,
 
-    #[account(
-        mut,
-        seeds = [
-            b"orbit_voters"
-        ],
-        bump
-    )]
-    pub voter_id_struct: Account<'info, VoterId>,
-
     #[account(mut)]
     pub wallet: Signer<'info>,
 
@@ -44,15 +37,14 @@ pub struct CreateMarketAccount<'info>{
 }
 
 pub fn create_account_handler(ctx: Context<CreateMarketAccount>, pfp_link: String, metadata_link: String) -> Result<()>{
-    let clock = Clock::get().expect("Could not get CLOCK SYSVAR");
+    let timestamp = Clock::get()?.unix_timestamp;
 
     ctx.accounts.market_account.wallet = ctx.accounts.wallet.key();
-    ctx.accounts.market_account.account_created = clock.unix_timestamp;
+    ctx.accounts.market_account.account_created = timestamp;
     ctx.accounts.market_account.metadata = metadata_link;
     ctx.accounts.market_account.profile_pic = pfp_link;
 
-    ctx.accounts.market_account.voter_id = ctx.accounts.voter_id_struct.current_voters;
-    ctx.accounts.voter_id_struct.current_voters += 1;
+    ctx.accounts.market_account.voter_id = u64::from_le_bytes([&timestamp.to_le_bytes()[4..8], &ctx.accounts.wallet.key().to_bytes()[0..4]].concat().try_into().unwrap());
 
     // 人之初，性本善。性相近，习相远
     ctx.accounts.market_account.reputation = [0; 5];

@@ -6,6 +6,3 @@ pub use reflink_accessors::*;
 
 pub mod account_transfer_accessors;
 pub use account_transfer_accessors::*;
-
-pub mod initialize;
-pub use initialize::*;

@@ -123,12 +123,4 @@ pub mod orbit_market_accounts {
     pub fn transfer_reflink(ctx: Context<TransferReflink>) -> Result<()>{
         transfer_reflink_handler(ctx)
     }
-
-
-    ////////////////////
-    /// PROGRAM INIT UTILS
-    
-    pub fn initialize_voter_struct(ctx: Context<CreateVoterIdStruct>) -> Result<()>{
-        initialize_voter_id_handler(ctx)
-    }
 }
