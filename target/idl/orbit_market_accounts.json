@@ -1,0 +1,765 @@
+{
+  "version": "0.1.0",
+  "name": "orbit_market_accounts",
+  "instructions": [
+    {
+      "name": "createAccount",
+      "docs": [
+        "ACCOUNT UTILS"
+      ],
+      "accounts": [
+        {
+          "name": "marketAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "wallet",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "pfpLink",
+          "type": "string"
+        },
+        {
+          "name": "metadataLink",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "updateProfileImage",
+      "accounts": [
+        {
+          "name": "marketAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "wallet",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "newLink",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "updateMetadata",
+      "accounts": [
+        {
+          "name": "marketAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "wallet",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "metadata",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "postTx",
+      "accounts": [
+        {
+          "name": "buyerAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "sellerAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "callerAuth",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "caller",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "submitRating",
+      "accounts": [
+        {
+          "name": "marketAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "callerAuth",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "caller",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "rating",
+          "type": {
+            "defined": "usize"
+          }
+        }
+      ]
+    },
+    {
+      "name": "incrementDisputeDiscounts",
+      "accounts": [
+        {
+          "name": "marketAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "callerAuth",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "caller",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "decrementDisputeDiscounts",
+      "accounts": [
+        {
+          "name": "marketAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "callerAuth",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "caller",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "incrementDisputeDiscountsMultiple",
+      "accounts": [
+        {
+          "name": "callerAuth",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "caller",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "setReflink",
+      "accounts": [
+        {
+          "name": "marketAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "reflink",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "wallet",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "removeReflink",
+      "accounts": [
+        {
+          "name": "marketAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "reflink",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "wallet",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "addVendorPhysicalListings",
+      "accounts": [
+        {
+          "name": "marketAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "wallet",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "addVendorDigitalListings",
+      "accounts": [
+        {
+          "name": "marketAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "wallet",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "addVendorCommissionListings",
+      "accounts": [
+        {
+          "name": "marketAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "wallet",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "addBuyerPhysicalTransactions",
+      "docs": [
+        ": BUYER"
+      ],
+      "accounts": [
+        {
+          "name": "marketAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "wallet",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "addBuyerDigitalTransactions",
+      "accounts": [
+        {
+          "name": "marketAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "wallet",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "addBuyerCommissionTransactions",
+      "accounts": [
+        {
+          "name": "marketAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "wallet",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "addSellerPhysicalTransactions",
+      "docs": [
+        ":SELLER"
+      ],
+      "accounts": [
+        {
+          "name": "marketAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "wallet",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "addSellerDigitalTransactions",
+      "accounts": [
+        {
+          "name": "marketAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "wallet",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "addSellerCommissionTransactions",
+      "accounts": [
+        {
+          "name": "marketAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "wallet",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "initiateTransfer",
+      "accounts": [
+        {
+          "name": "transferStruct",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "sourceMarketAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "sourceWallet",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "destinationMarketAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "destinationWallet",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "confirmTransfer",
+      "accounts": [
+        {
+          "name": "sourceMarketAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "sourceWallet",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "destinationMarketAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "destinationWallet",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "transferRequest",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "declineTransfer",
+      "accounts": [
+        {
+          "name": "sourceMarketAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "sourceWallet",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "destinationMarketAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "destinationWallet",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "transferRequest",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "invoker",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "createReflink",
+      "docs": [
+        "REFLINK UTILS"
+      ],
+      "accounts": [
+        {
+          "name": "reflink",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "marketAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "wallet",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "deleteReflink",
+      "accounts": [
+        {
+          "name": "reflink",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "marketAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "wallet",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "transferReflink",
+      "accounts": [
+        {
+          "name": "reflinkStruct",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "newAddress",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "wallet",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "AccountTransfer",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "source",
+            "type": "publicKey"
+          },
+          {
+            "name": "destination",
+            "type": "publicKey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "OrbitMarketAccount",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "wallet",
+            "type": "publicKey"
+          },
+          {
+            "name": "transactions",
+            "type": "u32"
+          },
+          {
+            "name": "accountCreated",
+            "type": "i64"
+          },
+          {
+            "name": "reputation",
+            "type": {
+              "array": [
+                "u32",
+                5
+              ]
+            }
+          },
+          {
+            "name": "voterId",
+            "type": "u64"
+          },
+          {
+            "name": "metadata",
+            "type": "string"
+          },
+          {
+            "name": "profilePic",
+            "type": "string"
+          },
+          {
+            "name": "usedReflink",
+            "type": "publicKey"
+          },
+          {
+            "name": "disputeDiscounts",
+            "type": "u8"
+          },
+          {
+            "name": "ownedReflink",
+            "type": "publicKey"
+          },
+          {
+            "name": "transferStruct",
+            "type": "publicKey"
+          },
+          {
+            "name": "digitalListings",
+            "type": "bool"
+          },
+          {
+            "name": "physicalListings",
+            "type": "bool"
+          },
+          {
+            "name": "commissionListings",
+            "type": "bool"
+          },
+          {
+            "name": "buyerDigitalTransactions",
+            "type": "bool"
+          },
+          {
+            "name": "buyerPhysicalTransactions",
+            "type": "bool"
+          },
+          {
+            "name": "buyerCommissionTransactions",
+            "type": "bool"
+          },
+          {
+            "name": "sellerDigitalTransactions",
+            "type": "bool"
+          },
+          {
+            "name": "sellerPhysicalTransactions",
+            "type": "bool"
+          },
+          {
+            "name": "sellerCommissionTransactions",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "OrbitReflink",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "reflinkOwner",
+            "type": "publicKey"
+          },
+          {
+            "name": "uses",
+            "type": "u8"
+          },
+          {
+            "name": "users",
+            "type": {
+              "vec": "publicKey"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "VoterId",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "currentVoters",
+            "type": "u64"
+          }
+        ]
+      }
+    }
+  ],
+  "types": [
+    {
+      "name": "ReviewErrors",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "RatingOutsideRange"
+          },
+          {
+            "name": "InvalidReviewAuthority"
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "InvalidMasterPubkey",
+      "msg": "this pubkey is already used by a non-system program. please generate another one"
+    },
+    {
+      "code": 6001,
+      "name": "CannotCallOrbitAccountsProgram",
+      "msg": "Could not call orbit accounts program"
+    },
+    {
+      "code": 6002,
+      "name": "InvalidAccountsProgramAction",
+      "msg": "invalid action"
+    },
+    {
+      "code": 6003,
+      "name": "MismatchedTransferDestination",
+      "msg": "mismatched destination addresses in transfer request confirmation. This request probably wasn't for you."
+    },
+    {
+      "code": 6004,
+      "name": "MismatchedTransferSource",
+      "msg": "mismatched sources addresses in transfer request confirmation."
+    },
+    {
+      "code": 6005,
+      "name": "MismatchedReflink",
+      "msg": "reflink passed was not for the source market account"
+    },
+    {
+      "code": 6006,
+      "name": "MismatchedUsersForReflink",
+      "msg": "users passed do not match reflink"
+    },
+    {
+      "code": 6007,
+      "name": "InvalidSeedString",
+      "msg": "invalid seed string for struct"
+    }
+  ],
+  "metadata": {
+    "address": "7AwGcaYA8SC32T5kcv5q4u9HhY49a7cNAAp8CpcbibFq"
+  }
+}
