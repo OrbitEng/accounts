@@ -26,7 +26,7 @@ pub struct InitTransfer<'info>{
             source_wallet.key().as_ref()
         ],
         bump,
-        constraint = source_market_account.transfer_struct == Pubkey::from(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
+        constraint = source_market_account.transfer_struct == Pubkey::from([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
     )]
     pub source_market_account: Box<Account<'info, OrbitMarketAccount>>,
 
@@ -42,7 +42,7 @@ pub struct InitTransfer<'info>{
             destination_wallet.key().as_ref()
         ],
         bump,
-        constraint = destination_market_account.transfer_struct == Pubkey::from(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
+        constraint = destination_market_account.transfer_struct == Pubkey::from([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
     )]
     pub destination_market_account: Box<Account<'info, OrbitMarketAccount>>,
 
@@ -132,10 +132,10 @@ pub fn account_transfer_confirm(ctx: Context<ConfirmTransfer>) -> Result<()> {
     ctx.accounts.destination_market_account.owned_reflink = ctx.accounts.source_market_account.owned_reflink;
 
     // close old account to old wallet
-    ctx.accounts.source_market_account.transfer_struct = Pubkey::from(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
+    ctx.accounts.source_market_account.transfer_struct = Pubkey::from([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
     ctx.accounts.source_market_account.close(ctx.accounts.source_wallet.to_account_info()).expect("could not close old market account");
     ctx.accounts.transfer_request.close(ctx.accounts.source_wallet.to_account_info()).expect("could not close transfer struct");
-    ctx.accounts.destination_market_account.transfer_struct = Pubkey::from(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
+    ctx.accounts.destination_market_account.transfer_struct = Pubkey::from([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
     Ok(())
 }
 
@@ -193,8 +193,8 @@ pub struct DeclineTransfer<'info>{
 }
 
 pub fn account_transfer_decline(ctx: Context<DeclineTransfer>) -> Result<()>{
-    ctx.accounts.source_market_account.transfer_struct = Pubkey::from(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
-    ctx.accounts.destination_market_account.transfer_struct = Pubkey::from(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
+    ctx.accounts.source_market_account.transfer_struct = Pubkey::from([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
+    ctx.accounts.destination_market_account.transfer_struct = Pubkey::from([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
 
     ctx.accounts.source_market_account.close(ctx.accounts.source_wallet.to_account_info()).expect("could not close old market account");
     ctx.accounts.transfer_request.close(ctx.accounts.source_wallet.to_account_info())

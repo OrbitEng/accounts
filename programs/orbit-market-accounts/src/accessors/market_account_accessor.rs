@@ -47,8 +47,8 @@ pub fn create_account_handler(ctx: Context<CreateMarketAccount>, pfp_link: Strin
     // 人之初，性本善。性相近，习相远
     ctx.accounts.market_account.reputation = [0; 5];
     ctx.accounts.market_account.transactions = 0;
-    ctx.accounts.market_account.owned_reflink = Pubkey::from(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
-    ctx.accounts.market_account.transfer_struct = Pubkey::from(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
+    ctx.accounts.market_account.owned_reflink = Pubkey::from([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
+    ctx.accounts.market_account.transfer_struct = Pubkey::from([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
     ctx.accounts.market_account.digital_listings = false;
     ctx.accounts.market_account.physical_listings = false;
     ctx.accounts.market_account.commission_listings = false;
@@ -60,7 +60,7 @@ pub fn create_account_handler(ctx: Context<CreateMarketAccount>, pfp_link: Strin
         reflink_acc.uses += 1;
         reflink_acc.exit(ctx.program_id)?;
     }else{
-        ctx.accounts.market_account.used_reflink = Pubkey::from(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
+        ctx.accounts.market_account.used_reflink = Pubkey::from([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
     }
     Ok(())
 }
@@ -154,7 +154,7 @@ pub struct RemoveReflink<'info>{
 }
 
 pub fn remove_reflink_handler(ctx: Context<RemoveReflink>) -> Result<()>{
-    ctx.accounts.market_account.used_reflink = Pubkey::from(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
+    ctx.accounts.market_account.used_reflink = Pubkey::from([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
     ctx.accounts.reflink.uses -= 1;
     let pos = ctx.accounts.reflink.users.iter().position(|user| *user == ctx.accounts.market_account.key()).expect("user not found for reflink");
     if pos == (ctx.accounts.reflink.users.len()-1){

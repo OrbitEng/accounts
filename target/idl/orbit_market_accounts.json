@@ -758,8 +758,5 @@
       "name": "InvalidSeedString",
       "msg": "invalid seed string for struct"
     }
-  ],
-  "metadata": {
-    "address": "7AwGcaYA8SC32T5kcv5q4u9HhY49a7cNAAp8CpcbibFq"
-  }
+  ]
 }

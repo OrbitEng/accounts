@@ -19,7 +19,7 @@ pub struct CreateReflink<'info>{
 
     #[account(
         mut,
-        constraint = market_account.owned_reflink == Pubkey::from(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]),
+        constraint = market_account.owned_reflink == Pubkey::from([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]),
         constraint = (Clock::get()?.unix_timestamp - market_account.account_created) > 604800,
         constraint = market_account.transactions > 3,
         seeds = [
@@ -79,12 +79,12 @@ pub fn delete_reflink_handler(ctx: Context<DeleteReflink>) -> Result<()>{
         };
 
         let mut user_acc = Account::<OrbitMarketAccount>::try_from(&ctx.remaining_accounts[user.0]).expect(format!("could not deserialize user account {:?}", user.0).as_str());
-        user_acc.used_reflink = Pubkey::from(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
+        user_acc.used_reflink = Pubkey::from([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
         ctx.remaining_accounts[user.0].exit(&crate::ID)?;
     }
     
     ctx.accounts.reflink.close(ctx.accounts.wallet.to_account_info()).expect("could not close reflink account");
-    ctx.accounts.market_account.owned_reflink = Pubkey::from(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
+    ctx.accounts.market_account.owned_reflink = Pubkey::from([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
 
     Ok(())
 }
