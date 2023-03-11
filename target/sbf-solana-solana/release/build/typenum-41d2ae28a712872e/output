@@ -1,3 +1,0 @@
-cargo:rerun-if-changed=build/main.rs
-cargo:rustc-env=TYPENUM_BUILD_CONSTS=/mnt/c/Users/popre/Desktop/rust/orbit-monorepo/backend/accounts/target/sbf-solana-solana/release/build/typenum-41d2ae28a712872e/out/consts.rs
-cargo:rustc-env=TYPENUM_BUILD_OP=/mnt/c/Users/popre/Desktop/rust/orbit-monorepo/backend/accounts/target/sbf-solana-solana/release/build/typenum-41d2ae28a712872e/out/op.rs
